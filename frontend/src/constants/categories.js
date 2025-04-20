@@ -1,0 +1,132 @@
+export const categories = [
+  'Food & Dining',
+  'Transportation',
+  'Shopping',
+  'Entertainment',
+  'Bills & Utilities',
+  'Healthcare',
+  'Education',
+  'Travel',
+  'Other'
+];
+
+export const subCategories = {
+  'Food & Dining': [
+    'Groceries',
+    'Restaurants',
+    'Cafes & Coffee',
+    'Food Delivery',
+    'Snacks & Beverages',
+    'Alcohol & Bars',
+    'Bakery',
+    'Street Food',
+    'Desserts',
+    'Other'
+  ],
+  'Transportation': [
+    'Public Transport',
+    'Taxi & Ride Share',
+    'Fuel',
+    'Car Maintenance',
+    'Parking',
+    'Tolls',
+    'Car Insurance',
+    'Car Loan EMI',
+    'Bicycle',
+    'Other'
+  ],
+  'Shopping': [
+    'Clothing',
+    'Electronics',
+    'Home & Garden',
+    'Personal Care',
+    'Gifts',
+    'Furniture',
+    'Appliances',
+    'Jewelry',
+    'Books & Stationery',
+    'Sports Equipment',
+    'Pet Supplies',
+    'Other'
+  ],
+  'Entertainment': [
+    'Movies & Shows',
+    'Games',
+    'Sports',
+    'Hobbies',
+    'Events',
+    'Streaming Services',
+    'Music',
+    'Theater',
+    'Concerts',
+    'Gaming',
+    'Sports Events',
+    'Other'
+  ],
+  'Bills & Utilities': [
+    'Electricity',
+    'Water',
+    'Internet',
+    'Mobile',
+    'Rent',
+    'Gas',
+    'Cable TV',
+    'Home Insurance',
+    'Property Tax',
+    'Maintenance',
+    'Other'
+  ],
+  'Healthcare': [
+    'Doctor Visits',
+    'Medicines',
+    'Health Insurance',
+    'Fitness',
+    'Dental',
+    'Optical',
+    'Therapy',
+    'Medical Tests',
+    'Health Supplements',
+    'Gym Membership',
+    'Yoga Classes',
+    'Other'
+  ],
+  'Education': [
+    'Tuition',
+    'Books & Supplies',
+    'Online Courses',
+    'Workshops',
+    'Certifications',
+    'School Fees',
+    'College Fees',
+    'Educational Apps',
+    'Study Materials',
+    'Educational Trips',
+    'Other'
+  ],
+  'Travel': [
+    'Flights',
+    'Hotels',
+    'Local Transport',
+    'Sightseeing',
+    'Travel Insurance',
+    'Visa Fees',
+    'Travel Gear',
+    'Tour Packages',
+    'Car Rental',
+    'Travel Accessories',
+    'Other'
+  ],
+  'Other': [
+    'Miscellaneous',
+    'Donations',
+    'Gifts',
+    'Repairs',
+    'Services',
+    'Legal Fees',
+    'Taxes',
+    'Investments',
+    'Insurance Premiums',
+    'Professional Services',
+    'Other'
+  ]
+}; 

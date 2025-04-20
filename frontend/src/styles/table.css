@@ -1,0 +1,123 @@
+/* Table Styles */
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.modern-table th,
+.modern-table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.modern-table th {
+  background-color: #f8f8f8;
+  color: #333333;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.modern-table td {
+  border-bottom: 1px solid #e0e0e0;
+  color: #333333;
+}
+
+/* Category, Sub-category, Bank, and Source cell styles */
+.category-cell,
+.sub-category-cell,
+.bank-cell,
+.source-cell {
+  font-weight: 600;
+  font-size: 0.9em;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Amount styles */
+.amount-value.income {
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+/* Date cell styles */
+.date-cell {
+  font-weight: 600;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.date-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.date-day {
+  font-size: 1.1em;
+}
+
+.date-month {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+.modern-table tr:last-child td {
+  border-bottom: none;
+}
+
+.modern-table tr:hover {
+  background-color: #f8f8f8;
+}
+
+/* Notes cell styles */
+.notes-cell {
+  max-width: 300px;
+}
+
+.notes-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Specific column styles */
+.category-column,
+.sub-category-column {
+  min-width: 140px;
+}
+
+.amount-column {
+  min-width: 100px;
+}
+
+.date-column {
+  min-width: 100px;
+}
+
+.notes-column {
+  min-width: 200px;
+}
+
+.bank-column {
+  min-width: 120px;
+}
+
+.actions-column {
+  width: 120px;
+  text-align: center;
+}
+
+.actions-cell {
+  text-align: center;
+} 

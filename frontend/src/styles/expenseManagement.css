@@ -1,0 +1,1266 @@
+/* Modern Form Styles */
+.modern-form-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin: 0;
+  font-weight: 600;
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.form-section {
+  background: var(--background-light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--primary-color);
+  font-size: 1rem;
+}
+
+.amount-input {
+  padding-left: 2rem !important;
+}
+
+input, select, textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.select-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232E7D32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+.notes-input {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.error-message {
+  background: #FFEBEE;
+  color: var(--error-color);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.error-icon {
+  font-size: 1rem;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-button:hover {
+  background: var(--primary-hover);
+}
+
+.submit-button:disabled {
+  background: var(--border-color);
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Modern Table Styles */
+.expense-management-container {
+  width: 100%;
+  padding: 2rem;
+}
+
+.table-header {
+  margin-bottom: 2rem;
+}
+
+.table-header h2 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin: 0;
+  font-weight: 600;
+}
+
+.table-subtitle {
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  width: 100%;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.modern-table th {
+  background: var(--background-light);
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.modern-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.table-row:hover {
+  background: var(--background-light);
+}
+
+.date-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.date-day {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.date-month {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.amount-value {
+  font-weight: 600;
+  color: #D32F2F;
+}
+
+.amount-value.positive {
+  color: #D32F2F;
+}
+
+.amount-value.negative {
+  color: #D32F2F;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  transition: all 0.2s ease;
+}
+
+/* Category-specific colors */
+.category-badge[data-category="Food & Dining"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.category-badge[data-category="Transportation"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.category-badge[data-category="Shopping"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.category-badge[data-category="Entertainment"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.category-badge[data-category="Bills & Utilities"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.category-badge[data-category="Healthcare"] {
+  background-color: #FFEBEE;
+  color: #C62828;
+  border: 1px solid #EF9A9A;
+}
+
+.category-badge[data-category="Education"] {
+  background-color: #FFF8E1;
+  color: #F57F17;
+  border: 1px solid #FFE082;
+}
+
+.category-badge[data-category="Travel"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.category-badge[data-category="Other"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+.category-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notes-content {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background: var(--background-light);
+}
+
+.action-icon {
+  font-size: 1rem;
+}
+
+/* Pagination Styles */
+.pagination-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background: white;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--background-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.pagination-button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modern-form-container,
+  .expense-management-container {
+    padding: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .modern-table {
+    min-width: 800px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Sub Category Badge Styles */
+.sub-category-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  transition: all 0.2s ease;
+  margin-top: 0.25rem;
+}
+
+/* Food & Dining Sub Categories */
+.sub-category-badge[data-subcategory="Groceries"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Restaurants"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Cafes & Coffee"] {
+  background-color: #EFEBE9;
+  color: #5D4037;
+  border: 1px solid #BCAAA4;
+}
+
+.sub-category-badge[data-subcategory="Food Delivery"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Snacks & Beverages"] {
+  background-color: #FFF8E1;
+  color: #F57F17;
+  border: 1px solid #FFE082;
+}
+
+.sub-category-badge[data-subcategory="Alcohol & Bars"] {
+  background-color: #FCE4EC;
+  color: #C2185B;
+  border: 1px solid #F48FB1;
+}
+
+.sub-category-badge[data-subcategory="Bakery"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Street Food"] {
+  background-color: #F1F8E9;
+  color: #558B2F;
+  border: 1px solid #C5E1A5;
+}
+
+.sub-category-badge[data-subcategory="Desserts"] {
+  background-color: #FCE4EC;
+  color: #C2185B;
+  border: 1px solid #F48FB1;
+}
+
+/* Transportation Sub Categories */
+.sub-category-badge[data-subcategory="Public Transport"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Taxi & Ride Share"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Fuel"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Car Maintenance"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Parking"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+.sub-category-badge[data-subcategory="Tolls"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Car Insurance"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Car Loan EMI"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Bicycle"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+/* Shopping Sub Categories */
+.sub-category-badge[data-subcategory="Clothing"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Electronics"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Home & Garden"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Personal Care"] {
+  background-color: #FCE4EC;
+  color: #C2185B;
+  border: 1px solid #F48FB1;
+}
+
+.sub-category-badge[data-subcategory="Gifts"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Furniture"] {
+  background-color: #EFEBE9;
+  color: #5D4037;
+  border: 1px solid #BCAAA4;
+}
+
+.sub-category-badge[data-subcategory="Appliances"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Jewelry"] {
+  background-color: #FFF8E1;
+  color: #F57F17;
+  border: 1px solid #FFE082;
+}
+
+.sub-category-badge[data-subcategory="Books & Stationery"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Sports Equipment"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Pet Supplies"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+/* Entertainment Sub Categories */
+.sub-category-badge[data-subcategory="Movies & Shows"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Games"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Sports"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Hobbies"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Events"] {
+  background-color: #FCE4EC;
+  color: #C2185B;
+  border: 1px solid #F48FB1;
+}
+
+.sub-category-badge[data-subcategory="Streaming Services"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Music"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Theater"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Concerts"] {
+  background-color: #FCE4EC;
+  color: #C2185B;
+  border: 1px solid #F48FB1;
+}
+
+.sub-category-badge[data-subcategory="Gaming"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Sports Events"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+/* Bills & Utilities Sub Categories */
+.sub-category-badge[data-subcategory="Electricity"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Water"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Internet"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Mobile"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Rent"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Gas"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Cable TV"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Home Insurance"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Property Tax"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Maintenance"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+/* Healthcare Sub Categories */
+.sub-category-badge[data-subcategory="Doctor Visits"] {
+  background-color: #FFEBEE;
+  color: #C62828;
+  border: 1px solid #EF9A9A;
+}
+
+.sub-category-badge[data-subcategory="Medicines"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Health Insurance"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Fitness"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Dental"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Optical"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Therapy"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Medical Tests"] {
+  background-color: #FFEBEE;
+  color: #C62828;
+  border: 1px solid #EF9A9A;
+}
+
+.sub-category-badge[data-subcategory="Health Supplements"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Gym Membership"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Yoga Classes"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+/* Education Sub Categories */
+.sub-category-badge[data-subcategory="Tuition"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Books & Supplies"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Online Courses"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Workshops"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Certifications"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="School Fees"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="College Fees"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Educational Apps"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Study Materials"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Educational Trips"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+/* Travel Sub Categories */
+.sub-category-badge[data-subcategory="Flights"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Hotels"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Local Transport"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Sightseeing"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+.sub-category-badge[data-subcategory="Travel Insurance"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Visa Fees"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+.sub-category-badge[data-subcategory="Travel Gear"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Tour Packages"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Car Rental"] {
+  background-color: #E8EAF6;
+  color: #283593;
+  border: 1px solid #9FA8DA;
+}
+
+.sub-category-badge[data-subcategory="Travel Accessories"] {
+  background-color: #FFF3E0;
+  color: #E65100;
+  border: 1px solid #FFB74D;
+}
+
+/* Other Sub Categories */
+.sub-category-badge[data-subcategory="Miscellaneous"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+.sub-category-badge[data-subcategory="Donations"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Gifts"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Repairs"] {
+  background-color: #E0F7FA;
+  color: #00838F;
+  border: 1px solid #80DEEA;
+}
+
+.sub-category-badge[data-subcategory="Services"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Legal Fees"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+.sub-category-badge[data-subcategory="Taxes"] {
+  background-color: #FFEBEE;
+  color: #C62828;
+  border: 1px solid #EF9A9A;
+}
+
+.sub-category-badge[data-subcategory="Investments"] {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #A5D6A7;
+}
+
+.sub-category-badge[data-subcategory="Insurance Premiums"] {
+  background-color: #E3F2FD;
+  color: #1565C0;
+  border: 1px solid #90CAF9;
+}
+
+.sub-category-badge[data-subcategory="Professional Services"] {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+  border: 1px solid #CE93D8;
+}
+
+.sub-category-badge[data-subcategory="Other"] {
+  background-color: #F5F5F5;
+  color: #424242;
+  border: 1px solid #E0E0E0;
+}
+
+/* Hover effect for all sub-category badges */
+.sub-category-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Date Range Filter Styles */
+.date-range-filter {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filter-header h3 {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.reset-button {
+  background: var(--background-light);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-button:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.date-inputs {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.date-inputs .form-group {
+  flex: 1;
+}
+
+.date-inputs label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* React DatePicker Custom Styles */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker {
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__header {
+  background-color: var(--background-light);
+  border-bottom: 1px solid var(--border-color);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 0.5rem;
+}
+
+.react-datepicker__current-month {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.react-datepicker__day-name {
+  color: var(--text-secondary);
+  font-weight: 500;
+  width: 2rem;
+  line-height: 2rem;
+}
+
+.react-datepicker__day {
+  width: 2rem;
+  line-height: 2rem;
+  margin: 0.2rem;
+  border-radius: 50%;
+  color: var(--text-primary);
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--background-light);
+  border-radius: 50%;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.react-datepicker__day--selected:hover {
+  background-color: var(--primary-color);
+  opacity: 0.8;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.react-datepicker__day--in-range {
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.react-datepicker__day--in-selecting-range {
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.react-datepicker__day--disabled {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.react-datepicker__navigation {
+  top: 0.5rem;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: var(--primary-color);
+}
+
+.react-datepicker__month-dropdown,
+.react-datepicker__year-dropdown {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__month-option:hover,
+.react-datepicker__year-option:hover {
+  background-color: var(--background-light);
+}
+
+.react-datepicker__month-option--selected,
+.react-datepicker__year-option--selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.date-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--background-light);
+  transition: all 0.2s;
+}
+
+.date-input:disabled {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.date-picker-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--background-light);
+  transition: all 0.2s;
+}
+
+.date-picker-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+}
+
+.error-message {
+  background: #FFEBEE;
+  color: var(--error-color);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.error-icon {
+  font-size: 1rem;
+}
+
+/* Expense History Header */
+.expense-history-header {
+  margin: 2rem 0 1rem;
+}
+
+.expense-history-header h2 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin: 0;
+  font-weight: 600;
+}
+
+.expense-history-header .table-subtitle {
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+} 
