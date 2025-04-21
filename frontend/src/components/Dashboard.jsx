@@ -50,6 +50,10 @@ const Dashboard = () => {
   const [topCategories, setTopCategories] = useState([]);
   const [topSubCategories, setTopSubCategories] = useState([]);
   const [selectedCategorySubcats, setSelectedCategorySubcats] = useState({});
+  const [incomeData, setIncomeData] = useState([]);
+  const [categoryBudgets, setCategoryBudgets] = useState({});
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [creditCardTransactions, setCreditCardTransactions] = useState([]);
 
   // Generate last 6 months options
   const getLastSixMonths = () => {
@@ -70,6 +74,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchExpenses();
+    fetchIncome();
+    fetchCategoryBudgets();
+    fetchCurrentBalance();
+    fetchCreditCardTransactions();
   }, [timeRange, customRange]);
 
   // Add event listener for expense updates
@@ -119,6 +127,111 @@ const Dashboard = () => {
     } catch (err) {
       setError(err.message);
       setLoading(false);
+    }
+  };
+
+  const fetchIncome = async () => {
+    try {
+      const now = new Date();
+      let startDate, endDate = new Date();
+
+      if (customRange === 'last7') {
+        startDate = new Date(now.setDate(now.getDate() - 7));
+      } else if (customRange === 'last30') {
+        startDate = new Date(now.setDate(now.getDate() - 30));
+      } else if (customRange === 'last90') {
+        startDate = new Date(now.setDate(now.getDate() - 90));
+      } else if (customRange === 'last365') {
+        startDate = new Date(now.setDate(now.getDate() - 365));
+      } else if (customRange.includes('-')) {
+        const [year, month] = customRange.split('-').map(Number);
+        startDate = new Date(year, month - 1, 1);
+        endDate = new Date(year, month, 0);
+      }
+      
+      const response = await fetch(
+        `http://127.0.0.1:8000/get-all-income-transactions?start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch income');
+
+      const data = await response.json();
+      setIncomeData(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const fetchCategoryBudgets = async () => {
+    try {
+      const now = new Date();
+      const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+      const currentMonth = monthNames[now.getMonth()];
+      const currentYear = now.getFullYear().toString();
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/get-category-by-month-and-year?month=${currentMonth}&year=${currentYear}`
+      );
+      
+      if (!response.ok) throw new Error('Failed to fetch category budgets');
+      
+      const categories = await response.json();
+      
+      // Transform the data into a format we can use
+      const budgets = categories.reduce((acc, category) => {
+        if (!acc[category.category]) {
+          acc[category.category] = 0;
+        }
+        acc[category.category] += category.budget;
+        return acc;
+      }, {});
+      
+      setCategoryBudgets(budgets);
+    } catch (err) {
+      console.error('Error fetching category budgets:', err);
+    }
+  };
+
+  const fetchCurrentBalance = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/current-balance');
+      if (!response.ok) throw new Error('Failed to fetch current balance');
+      const data = await response.json();
+      setCurrentBalance(data.current_balance);
+    } catch (err) {
+      console.error('Error fetching current balance:', err);
+    }
+  };
+
+  const fetchCreditCardTransactions = async () => {
+    try {
+      const now = new Date();
+      let startDate, endDate = new Date();
+
+      if (customRange === 'last7') {
+        startDate = new Date(now.setDate(now.getDate() - 7));
+      } else if (customRange === 'last30') {
+        startDate = new Date(now.setDate(now.getDate() - 30));
+      } else if (customRange === 'last90') {
+        startDate = new Date(now.setDate(now.getDate() - 90));
+      } else if (customRange === 'last365') {
+        startDate = new Date(now.setDate(now.getDate() - 365));
+      } else if (customRange.includes('-')) {
+        const [year, month] = customRange.split('-').map(Number);
+        startDate = new Date(year, month - 1, 1);
+        endDate = new Date(year, month, 0);
+      }
+      
+      const response = await fetch(
+        `http://localhost:8000/get-credit-card-transaction-by-date-range?start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch credit card transactions');
+
+      const data = await response.json();
+      setCreditCardTransactions(data);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -289,9 +402,9 @@ const Dashboard = () => {
     datasets: [{
       label: 'Amount',
       data: topSubCategories.map(([, amount]) => amount),
-      backgroundColor: 'rgba(99, 102, 241, 0.7)', // Single color for all bars
-      borderColor: 'rgba(99, 102, 241, 1)',
-      borderWidth: 1,
+      backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue fill
+      borderColor: 'rgba(59, 130, 246, 1)', // Solid blue border
+      borderWidth: 2,
     }],
   });
 
@@ -303,6 +416,179 @@ const Dashboard = () => {
       borderWidth: 1,
     }],
   });
+
+  const prepareIncomeVsExpenseData = () => {
+    // Get the last 12 months
+    const months = [];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const now = new Date();
+    
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.unshift({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        label: `${monthNames[date.getMonth()]} ${date.getFullYear()}`
+      });
+    }
+
+    // Group both income and expenses by month
+    const groupedData = months.reduce((acc, { year, month }) => {
+      const key = `${year}-${String(month + 1).padStart(2, '0')}`;
+      acc[key] = { income: 0, expense: 0 };
+      return acc;
+    }, {});
+
+    // Process expenses
+    expenses.forEach(expense => {
+      const date = new Date(expense.date_time);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (groupedData[key]) {
+        groupedData[key].expense += Math.abs(expense.amount);
+      }
+    });
+
+    // Process income
+    incomeData.forEach(income => {
+      const date = new Date(income.date_time);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (groupedData[key]) {
+        groupedData[key].income += Math.abs(income.amount);
+      }
+    });
+
+    return {
+      labels: months.map(m => m.label),
+      datasets: [
+        {
+          label: 'Income',
+          data: months.map(m => {
+            const key = `${m.year}-${String(m.month + 1).padStart(2, '0')}`;
+            return groupedData[key]?.income || 0;
+          }),
+          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+        },
+        {
+          label: 'Expenses',
+          data: months.map(m => {
+            const key = `${m.year}-${String(m.month + 1).padStart(2, '0')}`;
+            return groupedData[key]?.expense || 0;
+          }),
+          backgroundColor: 'rgba(239, 68, 68, 0.2)',
+          borderColor: 'rgba(239, 68, 68, 1)',
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+        }
+      ],
+    };
+  };
+
+  const prepareCategoryBudgetsData = () => {
+    // Define the allowed categories from the dropdown
+    const allowedCategories = [
+      'Food & Dining',
+      'Shopping',
+      'Transportation',
+      'Entertainment',
+      'Bills & Utilities',
+      'Health & Fitness',
+      'Travel',
+      'Education',
+      'Personal Care',
+      'Gifts & Donations',
+      'Investments',
+      'Others'
+    ];
+
+    // Filter categories to only include allowed ones
+    const filteredCategories = Object.keys(categoryData).filter(category => 
+      allowedCategories.includes(category)
+    );
+
+    const budgets = filteredCategories.map(category => categoryBudgets[category] || 0);
+    const spent = filteredCategories.map(category => categoryData[category] || 0);
+    
+    // Calculate percentages for tooltip
+    const percentages = filteredCategories.map((category, index) => {
+      const budget = budgets[index];
+      const spentAmount = spent[index];
+      return budget > 0 ? ((spentAmount / budget) * 100).toFixed(1) : 0;
+    });
+
+    return {
+      labels: filteredCategories,
+      datasets: [
+        {
+          label: 'Budget',
+          data: budgets,
+          backgroundColor: 'rgba(34, 197, 94, 0.2)', // Light green
+          borderColor: 'rgba(34, 197, 94, 1)', // Green
+          borderWidth: 2,
+          barPercentage: 0.7,
+          categoryPercentage: 0.9,
+        },
+        {
+          label: 'Spent',
+          data: spent,
+          backgroundColor: 'rgba(239, 68, 68, 0.2)', // Light red
+          borderColor: 'rgba(239, 68, 68, 1)', // Red
+          borderWidth: 2,
+          barPercentage: 0.7,
+          categoryPercentage: 0.9,
+        }
+      ],
+    };
+  };
+
+  const prepareCreditCardChartData = () => {
+    // Group transactions by month instead of day for better visualization
+    const groupedData = creditCardTransactions.reduce((acc, transaction) => {
+      const date = new Date(transaction.date_time);
+      const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      acc[monthYear] = (acc[monthYear] || 0) + Math.abs(transaction.amount);
+      return acc;
+    }, {});
+
+    // Sort dates
+    const sortedDates = Object.keys(groupedData).sort();
+    
+    // Format dates for display (Month Year)
+    const formattedDates = sortedDates.map(date => {
+      const [year, month] = date.split('-');
+      const monthName = new Date(2000, parseInt(month) - 1).toLocaleString('default', { month: 'short' });
+      return `${monthName} ${year}`;
+    });
+
+    return {
+      labels: formattedDates,
+      datasets: [
+        {
+          label: 'Credit Card Expenses',
+          data: sortedDates.map(date => groupedData[date]),
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          borderColor: 'rgba(99, 102, 241, 1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+      ],
+    };
+  };
 
   const chartOptions = {
     responsive: true,
@@ -538,7 +824,7 @@ const Dashboard = () => {
           <div className="card-content">
             <h3>Total Expenses</h3>
             <p className="amount">₹{summary.total.toLocaleString()}</p>
-            <p className="label">This {timeRange}</p>
+            <p className="label">{getTimeRangeLabel()}</p>
           </div>
         </div>
         <div className="summary-card top-category">
@@ -561,6 +847,18 @@ const Dashboard = () => {
             <p className="label">Single Transaction</p>
           </div>
         </div>
+        <div className="summary-card balance">
+          <div className="card-icon">
+            <FaWallet />
+          </div>
+          <div className="card-content">
+            <h3>Current Balance</h3>
+            <p className="amount" style={{ color: currentBalance >= 0 ? '#22c55e' : '#ef4444' }}>
+              ₹{Math.abs(currentBalance).toLocaleString()}
+            </p>
+            <p className="label">{currentBalance >= 0 ? 'Positive Balance' : 'Negative Balance'}</p>
+          </div>
+        </div>
       </div>
 
       <div className="charts-grid">
@@ -569,6 +867,73 @@ const Dashboard = () => {
           <div className="chart-container">
             {chartType === 'line' && <Line data={prepareChartData()} options={chartOptions} />}
             {chartType === 'bar' && <Bar data={prepareChartData()} options={chartOptions} />}
+          </div>
+        </div>
+
+        <div className="credit-card-chart">
+          <h2><FaChartLine /> Credit Card Expenses</h2>
+          <div className="chart-container">
+            <Line 
+              data={prepareCreditCardChartData()} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'bottom',
+                    labels: {
+                      boxWidth: 12,
+                      usePointStyle: true,
+                      pointStyle: 'circle'
+                    }
+                  },
+                  tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#1f2937',
+                    bodyColor: '#1f2937',
+                    borderColor: '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 12,
+                    bodyFont: {
+                      size: 14,
+                      family: "'Inter', sans-serif",
+                    },
+                    callbacks: {
+                      label: (context) => `₹${context.parsed.y.toLocaleString()}`,
+                    },
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'rgba(0, 0, 0, 0.05)',
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                    },
+                  },
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      maxRotation: 45,
+                      minRotation: 45,
+                    },
+                  },
+                },
+              }}
+            />
           </div>
         </div>
 
@@ -623,6 +988,7 @@ const Dashboard = () => {
             />
           </div>
         </div>
+
         <div className="top-categories">
           <h2><FaChartLine /> Top Spending Categories</h2>
           <div className="top-categories-list">
@@ -671,6 +1037,12 @@ const Dashboard = () => {
                     display: false
                   },
                   tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#1f2937',
+                    bodyColor: '#1f2937',
+                    borderColor: '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 12,
                     callbacks: {
                       label: (context) => `₹${context.raw.toLocaleString()}`
                     }
@@ -679,16 +1051,102 @@ const Dashboard = () => {
                 scales: {
                   y: {
                     beginAtZero: true,
+                    grid: {
+                      color: 'rgba(0, 0, 0, 0.05)',
+                      drawBorder: false,
+                    },
                     ticks: {
-                      callback: (value) => `₹${value.toLocaleString()}`
-                    }
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                    },
                   },
                   x: {
+                    grid: {
+                      display: false,
+                    },
                     ticks: {
-                      maxRotation: 45,
-                      minRotation: 45
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                    },
+                  },
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="category-budgets-chart">
+          <h2><FaChartBar /> Categories & Budgets</h2>
+          <div className="chart-container">
+            <Bar 
+              data={prepareCategoryBudgetsData()} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false
+                  },
+                  tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#1f2937',
+                    bodyColor: '#1f2937',
+                    borderColor: '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                      label: (context) => {
+                        const dataset = context.dataset;
+                        const value = context.parsed.y;
+                        const category = context.label;
+                        const budget = dataset.label === 'Budget' ? value : 
+                          context.chart.data.datasets[0].data[context.dataIndex];
+                        const spent = dataset.label === 'Spent' ? value : 
+                          context.chart.data.datasets[1].data[context.dataIndex];
+                        
+                        if (dataset.label === 'Budget') {
+                          return `Budget: ₹${value.toLocaleString()}`;
+                        } else {
+                          const percentage = budget > 0 ? ((spent / budget) * 100).toFixed(1) : 0;
+                          return `Spent: ₹${value.toLocaleString()} (${percentage}% of budget)`;
+                        }
+                      }
                     }
                   }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'rgba(0, 0, 0, 0.05)',
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                    },
+                  },
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      maxRotation: 45,
+                      minRotation: 45,
+                    },
+                  },
+                },
+                interaction: {
+                  mode: 'index',
+                  intersect: false,
                 }
               }}
             />
@@ -699,6 +1157,65 @@ const Dashboard = () => {
           <h2><FaChartBar /> Weekly Spending Pattern</h2>
           <div className="chart-container">
             <Bar data={prepareWeeklyTrendData()} options={weeklyChartOptions} />
+          </div>
+        </div>
+
+        <div className="category-trend-chart">
+          <h2><FaChartLine /> Income vs Expenses</h2>
+          <div className="chart-container">
+            <Line 
+              data={prepareIncomeVsExpenseData()} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'bottom',
+                    labels: {
+                      boxWidth: 12,
+                      usePointStyle: true,
+                      pointStyle: 'circle'
+                    }
+                  },
+                  tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#1f2937',
+                    bodyColor: '#1f2937',
+                    borderColor: '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                      label: (context) => `₹${context.raw.toLocaleString()}`
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'rgba(0, 0, 0, 0.05)',
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                    },
+                  },
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                      },
+                    },
+                  },
+                }
+              }}
+            />
           </div>
         </div>
       

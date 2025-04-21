@@ -353,3 +353,82 @@ def get_category_sub_category_names_by_month_and_year(month: str, year: str, db:
 
 
 ########################### & End of Category APIs ########################## 
+
+########################### & Credit Card Transaction APIs ########################## 
+
+@app.post("/create-credit-card-transaction")
+def create_credit_card_transaction(transaction: schemas.CreditCardTransactions, db:Session = Depends(get_db)):
+    logger.info(f"Creating new credit card transaction: {transaction.model_dump()}")
+    new_transaction = models.CreditCardTransactions(
+        amount=transaction.amount,
+        date_time=transaction.date_time,
+        timestamp=datetime.now(),
+        emi_duration=transaction.emi_duration,
+        bankname=transaction.bankname,
+        notes=transaction.notes,
+    )
+    db.add(new_transaction)
+    db.commit()
+    db.refresh(new_transaction)
+    logger.info(f"Successfully created credit card transaction with ID: {new_transaction.id}")
+    return new_transaction
+
+@app.get("/get-all-credit-card-transactions")
+def get_all_credit_card_transactions(db:Session = Depends(get_db)):
+    logger.info("Fetching all credit card transactions")
+    transactions = db.query(models.CreditCardTransactions).all()
+    logger.info(f"Retrieved {len(transactions)} credit card transactions")
+    return transactions 
+
+@app.get("/get-credit-card-transaction-by-id/{transaction_id}")
+def get_credit_card_transaction_by_id(transaction_id: int, db:Session = Depends(get_db)):
+    logger.info(f"Fetching credit card transaction with ID: {transaction_id}")
+    transaction = db.query(models.CreditCardTransactions).filter(models.CreditCardTransactions.id == transaction_id).first()
+    return transaction
+
+@app.put("/update-credit-card-transaction/{transaction_id}")
+def update_credit_card_transaction(transaction_id: int, transaction: schemas.CreditCardTransactions, db:Session = Depends(get_db)):
+    logger.info(f"Updating credit card transaction with ID: {transaction_id}")
+    transaction_query = db.query(models.CreditCardTransactions).filter(models.CreditCardTransactions.id == transaction_id)
+    existing_transaction = transaction_query.first()
+    if not existing_transaction:
+        logger.warning(f"Credit card transaction with ID {transaction_id} not found for update")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Credit card transaction with id {transaction_id} not found")
+    transaction_query.update(transaction.model_dump())
+    db.commit()
+    db.refresh(existing_transaction)
+    logger.info(f"Successfully updated credit card transaction with ID: {transaction_id}")
+    return existing_transaction
+
+@app.delete("/delete-credit-card-transaction/{transaction_id}")
+def delete_credit_card_transaction(transaction_id: int, db:Session = Depends(get_db)):
+    logger.info(f"Attempting to delete credit card transaction with ID: {transaction_id}")
+    transaction_query = db.query(models.CreditCardTransactions).filter(models.CreditCardTransactions.id == transaction_id)
+    transaction = transaction_query.first()
+    if not transaction:
+        logger.warning(f"Credit card transaction with ID {transaction_id} not found for deletion")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Credit card transaction with id {transaction_id} not found")
+    transaction_query.delete(synchronize_session=False)
+    db.commit()
+    logger.info(f"Successfully deleted credit card transaction with ID: {transaction_id}")
+    return "Credit card transaction deleted successfully"
+
+@app.get("/get-credit-card-transaction-by-date-range")
+def get_credit_card_transaction_by_date_range(start_date: date, end_date: date, db:Session = Depends(get_db)):
+    """
+    Get all credit card transactions by date range
+
+    Parameters:
+    - start_date (date): Start date in YYYY-MM-DD format (e.g., 2024-01-01)
+    - end_date (date): End date in YYYY-MM-DD format (e.g., 2024-01-31)
+
+    Returns:
+    - List of credit card transactions filtered by the date range
+    """
+
+    logger.info(f"Fetching credit card transaction by date range: {start_date} to {end_date}")
+    transactions = db.query(models.CreditCardTransactions).filter(models.CreditCardTransactions.date_time >= start_date, models.CreditCardTransactions.date_time <= end_date).all()
+    return transactions
+
+
+########################### & End of Credit Card Transaction APIs ########################## 

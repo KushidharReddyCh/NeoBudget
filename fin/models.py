@@ -39,4 +39,16 @@ class Category(Base):
     year = Column(String, nullable=False)
     last_updated = Column(DateTime, nullable=False)
     
+class CreditCardTransactions(Base):
+    __tablename__ = 'credit_card_transactions'
 
+    id = Column(Integer, primary_key=True, index=True)
+    amount = Column(Float, nullable=False)
+    date_time = Column(DateTime, nullable=False)  # <- added or renamed
+    timestamp = Column(DateTime, nullable=True)
+    emi_duration = Column(Integer)
+    bankname = Column(String)
+    notes = Column(String)
+
+
+    

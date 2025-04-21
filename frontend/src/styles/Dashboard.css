@@ -133,89 +133,79 @@
 
 .summary-card {
   background: white;
-  border-radius: 0;
-  padding: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.summary-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(to right, #1a1a1a, #333333);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  align-items: center;
+  gap: 15px;
+  transition: none;
 }
 
 .summary-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.summary-card:hover::before {
-  opacity: 1;
-}
-
-.card-icon {
-  font-size: 1.75rem;
-  padding: 1rem;
-  border-radius: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f5f9;
-  color: #1a1a1a;
+  transform: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.total .card-icon {
-  background: #f1f5f9;
+.summary-card .card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 
-.top-category .card-icon {
-  background: #f1f5f9;
+.summary-card.total .card-icon {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
 }
 
-.highest .card-icon {
-  background: #f1f5f9;
+.summary-card.top-category .card-icon {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
 }
 
-.card-content {
-  flex: 1;
+.summary-card.highest .card-icon {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: #f97316;
 }
 
-.summary-card h3 {
+.summary-card.balance .card-icon {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.summary-card .card-content h3 {
   margin: 0;
-  font-size: 0.875rem;
-  color: #1a1a1a;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.summary-card .amount {
-  margin: 0.75rem 0;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  letter-spacing: -0.025em;
-}
-
-.summary-card .label {
-  margin: 0;
-  font-size: 0.875rem;
-  color: #64748b;
+  font-size: 14px;
+  color: #6b7280;
   font-weight: 500;
+}
+
+.summary-card .card-content .amount {
+  margin: 5px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.summary-card.total .card-content .amount {
+  color: #ef4444;
+}
+
+.summary-card.top-category .card-content .amount {
+  color: #3b82f6;
+}
+
+.summary-card.highest .card-content .amount {
+  color: #f97316;
+}
+
+.summary-card .card-content .label {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
 }
 
 /* Charts Grid */
@@ -232,7 +222,8 @@
 .category-trend-chart,
 .top-categories,
 .subcategory-chart,
-.subcategory-distribution-chart {
+.subcategory-distribution-chart,
+.category-budgets-chart {
   background: white;
   border-radius: 0;
   padding: 1rem;
@@ -247,7 +238,8 @@
 .category-trend-chart:hover,
 .top-categories:hover,
 .subcategory-chart:hover,
-.subcategory-distribution-chart:hover {
+.subcategory-distribution-chart:hover,
+.category-budgets-chart:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -267,7 +259,8 @@
 .category-trend-chart,
 .top-categories,
 .subcategory-chart,
-.subcategory-distribution-chart {
+.subcategory-distribution-chart,
+.category-budgets-chart {
   height: 350px;
 }
 
@@ -277,7 +270,8 @@
 .top-categories h2,
 .subcategory-chart h2,
 .subcategory-distribution-chart h2,
-.main-chart h2 {
+.main-chart h2,
+.category-budgets-chart h2 {
   margin: 0 0 1rem 0;
   font-size: 1.25rem;
   color: #1a1a1a;
@@ -293,7 +287,8 @@
 .top-categories h2 svg,
 .subcategory-chart h2 svg,
 .subcategory-distribution-chart h2 svg,
-.main-chart h2 svg {
+.main-chart h2 svg,
+.category-budgets-chart h2 svg {
   width: 1.25rem;
   height: 1.25rem;
   margin-top: 1px;
@@ -600,4 +595,92 @@
 
 .weekly-trend-chart .recharts-tooltip-label {
   color: #1a1a1a !important;
+}
+
+.credit-card-chart {
+  background: white;
+  border-radius: 0;
+  padding: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.credit-card-chart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.credit-card-chart .chart-container {
+  flex: 1;
+  position: relative;
+  height: calc(100% - 2.5rem);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.credit-card-chart h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.credit-card-chart h2 svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 1px;
+  color: #1a1a1a;
+}
+
+.category-budgets-chart {
+  background: white;
+  border-radius: 0;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.category-budgets-chart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.category-budgets-chart .chart-container {
+  flex: 1;
+  position: relative;
+  height: calc(100% - 2.5rem);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.category-budgets-chart h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.category-budgets-chart h2 svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 1px;
+  color: #1a1a1a;
 }

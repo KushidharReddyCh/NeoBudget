@@ -28,3 +28,11 @@ class Category(BaseModel):
     budget: float
     month: str
     year: str
+
+class CreditCardTransactions(BaseModel):
+    amount: float
+    date_time: datetime
+    timestamp: Optional[datetime] = None
+    emi_duration: int
+    bankname: str
+    notes: Optional[str] = None

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaHistory, FaPlus, FaTimes, FaMoneyBillWave } from 'react-icons/fa';
 import ExpenseTable from '../components/ExpenseTable';
 import AddExpenseForm from '../components/AddExpenseForm';
-import ExpenseFilter from '../components/DateRangeFilter';
+import DateRangeFilter from '../components/DateRangeFilter';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import Toast from '../components/Toast';
@@ -125,9 +125,10 @@ const ExpensesPage = () => {
                 <FaPlus /> Add Expense
               </button>
             )}
-            <ExpenseFilter onFilterChange={handleFilterChange} />
           </div>
         </div>
+
+        <DateRangeFilter onFilterChange={handleFilterChange} />
 
         {showAddForm && (
           <div className="form-container">

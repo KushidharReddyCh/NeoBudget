@@ -1,0 +1,175 @@
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  white-space: nowrap;
+}
+
+/* Column specific styles */
+.date-column {
+  width: 120px;
+  min-width: 120px;
+}
+
+.amount-column {
+  width: 120px;
+  min-width: 120px;
+  text-align: right;
+}
+
+.bank-column {
+  width: 150px;
+  min-width: 150px;
+}
+
+.emi-column {
+  width: 150px;
+  min-width: 150px;
+}
+
+.notes-column {
+  min-width: 200px;
+}
+
+.actions-column {
+  width: 120px;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Date cell styling */
+.date-cell {
+  display: flex;
+  align-items: center;
+}
+
+.date-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date-day {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.date-month {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+}
+
+/* Amount styling */
+.amount-expense {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* Badge styling */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  gap: 0.5rem;
+}
+
+.badge-bank {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.badge-category {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+/* Notes styling */
+.notes-content {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action buttons styling */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.action-button:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.action-button.view:hover {
+  color: #1a1a1a;
+}
+
+.action-button.edit:hover {
+  color: #1a1a1a;
+}
+
+.action-button.delete:hover {
+  color: #dc3545;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .transaction-table th,
+  .transaction-table td {
+    padding: 0.75rem;
+  }
+
+  .date-column,
+  .amount-column,
+  .bank-column,
+  .emi-column,
+  .actions-column {
+    width: auto;
+    min-width: auto;
+  }
+} 

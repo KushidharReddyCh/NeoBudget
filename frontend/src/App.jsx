@@ -1,3 +1,4 @@
+// frontend/src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "./styles/expenseManagement.css";
@@ -5,6 +6,8 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import IncomesPage from "./pages/IncomesPage";
 import ExpensesPage from "./pages/ExpensesPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import CreditCardPage from "./pages/CreditCardPage";
 
 function App() {
   return (
@@ -16,6 +19,8 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/incomes" element={<IncomesPage />} />
             <Route path="/expenses" element={<ExpensesPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/credit-cards" element={<CreditCardPage />} />
           </Routes>
         </main>
       </div>
