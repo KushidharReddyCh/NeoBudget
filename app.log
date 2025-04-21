@@ -12631,3 +12631,175 @@
 2025-04-21 22:56:32,272 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
 2025-04-21 22:56:32,272 - fin.main - INFO - Retrieved 10 transactions
 2025-04-21 22:56:32,275 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 22:58:03,980 - fin.main - INFO - Fetching expense transactions
+2025-04-21 22:58:03,997 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 22:58:04,001 - fin.main - INFO - Fetching expense transactions
+2025-04-21 22:58:04,002 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 22:58:43,961 - fin.main - INFO - Fetching expense transactions
+2025-04-21 22:58:43,963 - fin.main - INFO - Filtering transactions by category: Transportation
+2025-04-21 22:58:43,974 - fin.main - INFO - Retrieved 5 transactions
+2025-04-21 23:25:53,837 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:25:53,871 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:25:53,877 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:25:53,878 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:26:34,961 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:26:34,961 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:26:34,968 - fin.main - INFO - Filtering transactions between 2025-04-01 and 2025-04-30
+2025-04-21 23:26:34,970 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:26:34,970 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:26:34,974 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:26:34,976 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:26:34,976 - fin.main - INFO - Filtering transactions between 2025-04-01 and 2025-04-30
+2025-04-21 23:26:34,977 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:26:34,977 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:33:39,939 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:33:39,946 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:33:39,960 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:33:39,963 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:33:56,111 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:33:56,114 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:33:56,124 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:33:56,127 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:39:13,655 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:39:13,655 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:39:13,656 - fin.main - INFO - Fetching current balance
+2025-04-21 23:39:13,656 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:39:13,660 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:39:13,661 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:39:13,663 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:39:13,666 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:39:13,672 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:39:13,678 - fin.main - INFO - Fetching current balance
+2025-04-21 23:39:13,678 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:39:13,682 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:39:13,685 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:39:13,686 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:39:13,686 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:39:13,687 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:39:13,688 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:39:13,690 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:39:17,105 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:39:17,107 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:39:17,111 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:39:17,114 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:40:01,034 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:40:01,040 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:40:01,044 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:40:01,045 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:40:30,211 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:40:30,225 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:40:30,230 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:40:30,231 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:40:44,007 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:40:44,008 - fin.main - INFO - Filtering transactions by category: Food & Dining
+2025-04-21 23:40:44,016 - fin.main - INFO - Retrieved 5 transactions
+2025-04-21 23:41:33,802 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:33,803 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:33,803 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:41:33,803 - fin.main - INFO - Fetching current balance
+2025-04-21 23:41:33,807 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:41:33,807 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:41:33,815 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:33,815 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:41:33,815 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:41:33,819 - fin.main - INFO - Fetching current balance
+2025-04-21 23:41:33,820 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:41:33,828 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:33,877 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:33,884 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:33,886 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:41:33,899 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:41:33,903 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:41:33,906 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:41:43,373 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:43,403 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:41:43,408 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:43,409 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:41:47,977 - fin.main - INFO - Attempting to delete transaction with ID: 69
+2025-04-21 23:41:47,995 - fin.main - INFO - Successfully deleted transaction with ID: 69
+2025-04-21 23:41:47,999 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:48,000 - fin.main - INFO - Retrieved 20 transactions
+2025-04-21 23:41:52,728 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:52,730 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:52,734 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:52,736 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:53,378 - fin.main - INFO - Fetching all credit card transactions
+2025-04-21 23:41:53,383 - fin.main - INFO - Retrieved 16 credit card transactions
+2025-04-21 23:41:53,387 - fin.main - INFO - Fetching all credit card transactions
+2025-04-21 23:41:53,399 - fin.main - INFO - Retrieved 16 credit card transactions
+2025-04-21 23:41:57,187 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:57,188 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:41:57,191 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:41:57,199 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:57,200 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:41:57,201 - fin.main - INFO - Fetching current balance
+2025-04-21 23:41:57,206 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:41:57,206 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:57,208 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:41:57,209 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:41:57,210 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:41:57,215 - fin.main - INFO - Retrieved 17 transactions
+2025-04-21 23:41:57,218 - fin.main - INFO - Fetching current balance
+2025-04-21 23:41:57,218 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:41:57,220 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:41:57,221 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:41:57,226 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:41:57,227 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:42:40,198 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:42:40,202 - fin.main - INFO - Retrieved 20 transactions
+2025-04-21 23:42:40,205 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:42:40,208 - fin.main - INFO - Retrieved 20 transactions
+2025-04-21 23:43:00,758 - fin.main - INFO - Creating new expense transaction: {'category': 'Transportation', 'sub_category': 'Public Transport', 'amount': 213.0, 'date_time': datetime.datetime(2025, 4, 21, 0, 0), 'timestamp': None, 'notes': '', 'transaction_type': 'debit', 'bankname': 'Union Bank'}
+2025-04-21 23:43:00,770 - fin.main - INFO - Successfully created transaction with ID: 73
+2025-04-21 23:43:00,774 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:00,774 - fin.main - INFO - Retrieved 21 transactions
+2025-04-21 23:43:08,925 - fin.main - INFO - Fetching transaction with ID: 73
+2025-04-21 23:43:08,927 - fin.main - INFO - Successfully retrieved transaction with ID: 73
+2025-04-21 23:43:08,930 - fin.main - INFO - Fetching transaction with ID: 73
+2025-04-21 23:43:08,932 - fin.main - INFO - Successfully retrieved transaction with ID: 73
+2025-04-21 23:43:23,110 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:43:23,115 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:23,115 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:23,118 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:43:23,118 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:23,119 - fin.main - INFO - Fetching current balance
+2025-04-21 23:43:23,119 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:43:23,119 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:43:23,133 - fin.main - INFO - Retrieved 18 transactions
+2025-04-21 23:43:23,136 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:43:23,139 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:23,142 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:43:23,147 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:23,148 - fin.main - INFO - Fetching current balance
+2025-04-21 23:43:23,150 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:23,151 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:43:23,151 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:43:23,156 - fin.main - INFO - Retrieved 18 transactions
+2025-04-21 23:43:24,820 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:24,821 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:24,821 - fin.main - INFO - Filtering transactions between 2025-04-01 and 2025-04-30
+2025-04-21 23:43:24,824 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:24,826 - fin.main - INFO - Retrieved 18 transactions
+2025-04-21 23:43:24,832 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:24,835 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:24,835 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:24,835 - fin.main - INFO - Filtering transactions between 2025-04-01 and 2025-04-30
+2025-04-21 23:43:24,837 - fin.main - INFO - Retrieved 18 transactions
+2025-04-21 23:43:46,009 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:46,009 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:46,009 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:43:46,009 - fin.main - INFO - Fetching current balance
+2025-04-21 23:43:46,010 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:43:46,011 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:43:46,015 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:43:46,017 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:46,022 - fin.main - INFO - Retrieved 18 transactions
+2025-04-21 23:43:46,028 - fin.main - INFO - Fetching credit card transaction by date range: 2025-03-22 to 2025-04-21
+2025-04-21 23:43:46,029 - fin.main - INFO - Fetching current balance
+2025-04-21 23:43:46,029 - fin.main - INFO - Fetching category by month: apr and year: 2025
+2025-04-21 23:43:46,029 - fin.main - INFO - Fetching all income transactions
+2025-04-21 23:43:46,031 - fin.main - INFO - Fetching expense transactions
+2025-04-21 23:43:46,031 - fin.main - INFO - Retrieved 10 transactions
+2025-04-21 23:43:46,031 - fin.main - INFO - Retrieved 8 categories
+2025-04-21 23:43:46,031 - fin.main - INFO - Filtering transactions between 2025-03-22 and 2025-04-21
+2025-04-21 23:43:46,033 - fin.main - INFO - Retrieved 18 transactions

@@ -19,19 +19,24 @@ const EditIncomeForm = ({ income, onClose, onUpdate }) => {
   // Predefined categories and banks for dropdowns
   const categories = [
     'Salary',
-    'Freelance',
-    'Business',
-    'Investments',
-    'Rental',
-    'Other'
+    'Bonus',
+    'Reimbursements / Claims',
+    'Returned by Friends',
+    'Borrowed from Friends',
+    'Returned by Family',
+    'Borrowed from Family',
+    'Freelance Income',
+    'Rental Income',
+    'Dividends / Investments',
+    'Others'
   ];
 
   const banks = [
-    'HDFC Bank',
-    'ICICI Bank',
-    'SBI',
+    'SBI Bank',
+    'Union Bank',
     'Axis Bank',
-    'Kotak Mahindra',
+    'Liquid Cash',
+    'UPI Lite',
     'Other'
   ];
 

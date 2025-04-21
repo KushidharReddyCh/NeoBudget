@@ -17,11 +17,11 @@ const EditExpenseForm = ({ expense, onClose, onUpdate }) => {
   const [availableSubCategories, setAvailableSubCategories] = useState([]);
 
   const banks = [
-    'HDFC Bank',
-    'ICICI Bank',
-    'SBI',
+    'SBI Bank',
+    'Union Bank',
     'Axis Bank',
-    'Kotak Mahindra',
+    'Liquid Cash',
+    'UPI Lite',
     'Other'
   ];
 

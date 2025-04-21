@@ -2,131 +2,106 @@ export const categories = [
   'Food & Dining',
   'Transportation',
   'Shopping',
+  'Housing',
+  'Personal Care',
   'Entertainment',
-  'Bills & Utilities',
   'Healthcare',
   'Education',
-  'Travel',
-  'Other'
+  'Miscellaneous',
+  'Debt',
+  'Taxes & Insurance',
+  'Others',
 ];
 
 export const subCategories = {
   'Food & Dining': [
-    'Groceries',
-    'Restaurants',
-    'Cafes & Coffee',
-    'Food Delivery',
+    'Coffee',
+    'Dining',
+    'Instant Groceries',
     'Snacks & Beverages',
-    'Alcohol & Bars',
-    'Bakery',
-    'Street Food',
-    'Desserts',
-    'Other'
+    'Food Delivery',
+    'Hang Out',
+    'Others'
   ],
   'Transportation': [
     'Public Transport',
-    'Taxi & Ride Share',
-    'Fuel',
-    'Car Maintenance',
-    'Parking',
-    'Tolls',
-    'Car Insurance',
-    'Car Loan EMI',
-    'Bicycle',
-    'Other'
+    'Auto RAPIDO',
+    'Bike RAPIDO',
+    'CAR RAPIDO',
+    'BUS Intra-State',
+    'BUS Inter-State',
+    'Train',
+    'Flight',
+    'Others'
+  ],
+  'Personal Care': [
+    'Books(Leisure)',
+    'Hair Cut'
+  ],
+  'Housing': [
+    'Rent',
+    'Groceries',
+    'Maintenance',
+    'Electricity',
+    'Internet',
+    'Household Items',
+    'Money Transfer',
+    'Others'
+  ],
+  'Debt': [
+    'Credit Card',
+    'Friends & Family',
+    'Others'
+  ],
+  'Miscellaneous': [
+    'Lent to Friends',
+    'Useless Shopping',
+    'Emergencies',
+    'Accessories',
+    'Others'
+  ],
+  'Taxes & Insurance': [
+    'Taxes',
+    'Insurance',
+    'Others'
   ],
   'Shopping': [
-    'Clothing',
-    'Electronics',
-    'Home & Garden',
-    'Personal Care',
-    'Gifts',
-    'Furniture',
-    'Appliances',
-    'Jewelry',
-    'Books & Stationery',
-    'Sports Equipment',
-    'Pet Supplies',
-    'Other'
+    'Apparel for yourself',
+    'Apparel for others / home',
+    'Electronics for yourself',
+    'Electronics for others / home',
+    'Gifts for yourself',
+    'Gifts for others / home',
+    'Stationery(Personal)',
+    'Home Essentials',
+    'Others'
   ],
   'Entertainment': [
-    'Movies & Shows',
-    'Games',
+    'Movies',
+    'Subscriptions',
+    'Gaming',
     'Sports',
     'Hobbies',
-    'Events',
-    'Streaming Services',
-    'Music',
-    'Theater',
-    'Concerts',
-    'Gaming',
-    'Sports Events',
-    'Other'
-  ],
-  'Bills & Utilities': [
-    'Electricity',
-    'Water',
-    'Internet',
-    'Mobile',
-    'Rent',
-    'Gas',
-    'Cable TV',
-    'Home Insurance',
-    'Property Tax',
-    'Maintenance',
-    'Other'
+    'Events / Concerts',
+    'Vacations',
+    'Others'
   ],
   'Healthcare': [
+    'Medicine',
     'Doctor Visits',
-    'Medicines',
-    'Health Insurance',
     'Fitness',
-    'Dental',
-    'Optical',
-    'Therapy',
-    'Medical Tests',
-    'Health Supplements',
-    'Gym Membership',
-    'Yoga Classes',
-    'Other'
+    'Others'
   ],
   'Education': [
-    'Tuition',
-    'Books & Supplies',
     'Online Courses',
     'Workshops',
-    'Certifications',
-    'School Fees',
-    'College Fees',
-    'Educational Apps',
-    'Study Materials',
-    'Educational Trips',
-    'Other'
+    'Educational Subscriptions',
+    'Books(Academic)',
+    'Stationery(Study)',
+    'Others'
   ],
-  'Travel': [
-    'Flights',
-    'Hotels',
-    'Local Transport',
-    'Sightseeing',
-    'Travel Insurance',
-    'Visa Fees',
-    'Travel Gear',
-    'Tour Packages',
-    'Car Rental',
-    'Travel Accessories',
-    'Other'
-  ],
-  'Other': [
-    'Miscellaneous',
-    'Donations',
-    'Gifts',
-    'Repairs',
-    'Services',
-    'Legal Fees',
-    'Taxes',
-    'Investments',
-    'Insurance Premiums',
-    'Professional Services',
-    'Other'
+  'Others': [
+    'Charity',
+    'Others'
   ]
 }; 

@@ -149,10 +149,11 @@ const AddExpenseForm = ({ onExpenseAdded }) => {
               className="form-input"
             >
               <option value="">Bank</option>
-              <option value="SBI">SBI</option>
-              <option value="HDFC">HDFC</option>
-              <option value="ICICI">ICICI</option>
-              <option value="Axis">Axis</option>
+              <option value="SBI Bank">SBI Bank</option>
+              <option value="Union Bank">Union Bank</option>
+              <option value="Axis Bank">Axis Bank</option>
+              <option value="Liquid Cash">Liquid Cash</option>
+              <option value="UPI Lite">UPI Lite</option>
               <option value="Other">Other</option>
             </select>
           </div>

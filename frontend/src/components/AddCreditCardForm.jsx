@@ -107,10 +107,9 @@ const AddCreditCardForm = ({ onTransactionAdded }) => {
               className="form-input"
             >
               <option value="">Bank</option>
-              <option value="SBI">SBI</option>
-              <option value="HDFC">HDFC</option>
-              <option value="ICICI">ICICI</option>
-              <option value="Axis">Axis</option>
+              <option value="SBI Credit Card">SBI Credit Card</option>
+              <option value="Standard Chartered Credit Card">Standard Chartered Credit Card</option>
+              <option value="ICICI Credit Card">ICICI Credit Card</option>
               <option value="Other">Other</option>
             </select>
           </div>

@@ -112,9 +112,14 @@ const AddIncomeForm = ({ onIncomeAdded }) => {
             >
               <option value="">Category</option>
               <option value="Salary">Salary</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Investment">Investment</option>
-              <option value="Rental">Rental</option>
+              <option value="Bonus">Bonus</option>
+              <option value="Reimbursements / Claims">Reimbursements / Claims</option>
+              <option value="Returned by Friends">Returned by Friends</option>
+              <option value="Borrowed from Friends">Borrowed from Friends</option>
+              <option value="Returned by Family">Returned by Family</option>
+              <option value="Borrowed from Family">Borrowed from Family</option>
+              <option value="Freelance Income">Freelance Income</option>
+              <option value="Dividends / Investments">Dividends / Investments</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -131,10 +136,11 @@ const AddIncomeForm = ({ onIncomeAdded }) => {
               className="form-input"
             >
               <option value="">Bank</option>
-              <option value="SBI">SBI</option>
-              <option value="HDFC">HDFC</option>
-              <option value="ICICI">ICICI</option>
-              <option value="Axis">Axis</option>
+              <option value="SBI Bank">SBI Bank</option>
+              <option value="Union Bank">Union Bank</option>
+              <option value="Axis Bank">Axis Bank</option>
+              <option value="Liquid Cash">Liquid Cash</option>
+              <option value="UPI Lite">UPI Lite</option>
               <option value="Other">Other</option>
             </select>
           </div>
