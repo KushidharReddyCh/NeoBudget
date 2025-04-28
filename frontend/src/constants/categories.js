@@ -89,7 +89,12 @@ export const subCategories = {
   'Healthcare': [
     'Medicine',
     'Doctor Visits',
+    'Optical',
+    'Dental',
     'Fitness',
+    'Gym',
+    'Gym Diet',
+    'Medical Tests',
     'Others'
   ],
   'Education': [

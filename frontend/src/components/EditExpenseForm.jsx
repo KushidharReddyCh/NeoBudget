@@ -8,7 +8,7 @@ const EditExpenseForm = ({ expense, onClose, onUpdate }) => {
     amount: '',
     date_time: '',
     notes: '',
-    transaction_type: 'expense',
+    transaction_type: 'debit',
     bankname: ''
   });
 
@@ -73,7 +73,7 @@ const EditExpenseForm = ({ expense, onClose, onUpdate }) => {
         amount: parseFloat(formData.amount),
         date_time: `${formData.date_time}T00:00:00.000Z`,
         timestamp: new Date().toISOString(),
-        transaction_type: 'expense'
+        transaction_type: 'debit'
       };
 
       // Call the parent's update handler

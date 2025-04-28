@@ -400,7 +400,7 @@ body {
 
 .transaction-table th,
 .transaction-table td {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0rem;
   text-align: left;
   vertical-align: middle;
   background: white;
@@ -434,7 +434,7 @@ body {
 /* Column Widths */
 .transaction-table th:nth-child(1), /* Date */
 .transaction-table td:nth-child(1) {
-  width: 80px;
+  width: 50px;
   text-align: center;
   padding-right: 0.5rem;
 }

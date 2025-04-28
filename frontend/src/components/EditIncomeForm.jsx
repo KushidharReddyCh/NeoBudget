@@ -7,7 +7,7 @@ const EditIncomeForm = ({ income, onClose, onUpdate }) => {
     amount: '',
     date_time: '',
     notes: '',
-    transaction_type: 'income',
+    transaction_type: 'credit',
     source: '',
     bankname: ''
   });
@@ -79,7 +79,7 @@ const EditIncomeForm = ({ income, onClose, onUpdate }) => {
         amount: parseFloat(formData.amount),
         date_time: `${formData.date_time}T00:00:00.000Z`,
         timestamp: new Date().toISOString(), // Add the required timestamp field
-        transaction_type: 'income'
+        transaction_type: 'credit'
       };
 
       // Call the parent's update handler

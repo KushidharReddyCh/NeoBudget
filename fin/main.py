@@ -224,6 +224,41 @@ def get_current_balance(db:Session = Depends(get_db)):
     current_balance = total_income - total_expense
     return {"current_balance": current_balance}
 
+@app.get("/get-current-balance-by-bank")
+def get_current_balance_by_bank(db: Session = Depends(get_db)):
+    logger.info("Fetching current balance by bank")
+
+    # Fetch total income per bank
+    income_by_bank = db.query(
+        models.IncomeTransactions.bankname,
+        func.sum(models.IncomeTransactions.amount).label("total_income")
+    ).group_by(models.IncomeTransactions.bankname).all()
+
+    # Fetch total expense per bank
+    expense_by_bank = db.query(
+        models.ExpenseTransactions.bankname,
+        func.sum(models.ExpenseTransactions.amount).label("total_expense")
+    ).group_by(models.ExpenseTransactions.bankname).all()
+
+    # Convert to dicts for easy lookup
+    income_dict = {bank: income for bank, income in income_by_bank}
+    expense_dict = {bank: expense for bank, expense in expense_by_bank}
+
+    # Union of all bank names
+    all_banks = set(income_dict.keys()).union(expense_dict.keys())
+
+    # Calculate net balance per bank
+    balance_by_bank = {
+        bank: (income_dict.get(bank, 0) - expense_dict.get(bank, 0))
+        for bank in all_banks
+    }
+    balance_by_bank = dict(sorted(balance_by_bank.items(), key=lambda item: item[1], reverse=True))
+
+    return {"balance_by_bank": balance_by_bank}
+
+
+
+
 ########################### & End of Balance APIs ########################## 
 
 

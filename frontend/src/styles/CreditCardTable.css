@@ -33,9 +33,11 @@
 }
 
 .amount-column {
+
   width: 120px;
   min-width: 120px;
   text-align: right;
+  font-weight: bold;
 }
 
 .bank-column {
@@ -84,7 +86,7 @@
 
 /* Amount styling */
 .amount-expense {
-  color: #dc3545;
+  color: #ef4444;
   font-weight: 600;
 }
 

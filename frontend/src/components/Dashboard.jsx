@@ -21,7 +21,8 @@ import {
   FaTags, 
   FaArrowUp,
   FaCalendarAlt,
-  FaChartArea
+  FaChartArea,
+  FaUniversity
 } from 'react-icons/fa';
 import '../styles/Dashboard.css';
 
@@ -54,6 +55,7 @@ const Dashboard = () => {
   const [categoryBudgets, setCategoryBudgets] = useState({});
   const [currentBalance, setCurrentBalance] = useState(0);
   const [creditCardTransactions, setCreditCardTransactions] = useState([]);
+  const [bankBalances, setBankBalances] = useState({});
 
   // Generate last 6 months options
   const getLastSixMonths = () => {
@@ -78,6 +80,7 @@ const Dashboard = () => {
     fetchCategoryBudgets();
     fetchCurrentBalance();
     fetchCreditCardTransactions();
+    fetchBankBalances();
   }, [timeRange, customRange]);
 
   // Add event listener for expense updates
@@ -207,15 +210,16 @@ const Dashboard = () => {
     try {
       const now = new Date();
       let startDate, endDate = new Date();
-
-      if (customRange === 'last7') {
-        startDate = new Date(now.setDate(now.getDate() - 7));
-      } else if (customRange === 'last30') {
-        startDate = new Date(now.setDate(now.getDate() - 30));
-      } else if (customRange === 'last90') {
-        startDate = new Date(now.setDate(now.getDate() - 90));
-      } else if (customRange === 'last365') {
+      if(!customRange.includes('-')){
         startDate = new Date(now.setDate(now.getDate() - 365));
+      // if (customRange === 'last7') {
+      //   startDate = new Date(now.setDate(now.getDate() - 7));
+      // } else if (customRange === 'last30') {
+      //   startDate = new Date(now.setDate(now.getDate() - 30));
+      // } else if (customRange === 'last90') {
+      //   startDate = new Date(now.setDate(now.getDate() - 90));
+      // } else if (customRange === 'last365') {
+      //   startDate = new Date(now.setDate(now.getDate() - 365));
       } else if (customRange.includes('-')) {
         const [year, month] = customRange.split('-').map(Number);
         startDate = new Date(year, month - 1, 1);
@@ -235,6 +239,17 @@ const Dashboard = () => {
     }
   };
 
+  const fetchBankBalances = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/get-current-balance-by-bank');
+      if (!response.ok) throw new Error('Failed to fetch bank balances');
+      const data = await response.json();
+      setBankBalances(data.balance_by_bank || {});
+    } catch (err) {
+      console.error('Error fetching bank balances:', err);
+    }
+  };
+
   const processCategories = (data) => {
     const categories = data.reduce((acc, expense) => {
       acc[expense.category] = (acc[expense.category] || 0) + Math.abs(expense.amount);
@@ -245,7 +260,7 @@ const Dashboard = () => {
     // Process top categories
     const sortedCategories = Object.entries(categories)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 5);
+      .slice(0, 100);
     setTopCategories(sortedCategories);
 
     // Process sub-categories
@@ -352,8 +367,12 @@ const Dashboard = () => {
     datasets: [{
       label: 'Daily Average',
       data: weeklyTrends.map(t => t.amount),
-      backgroundColor: 'rgba(34, 197, 94, 0.2)',
-      borderColor: 'rgba(34, 197, 94, 1)',
+      // backgroundColor: 'rgba(34, 197, 94, 0.2)',
+      // borderColor: 'rgba(34, 197, 94, 1)',
+
+      backgroundColor: 'rgba(6, 182, 212, 0.2)', // Cyan-400
+      borderColor: 'rgba(6, 182, 212, 1)', // Cyan-600
+      
       borderWidth: 2,
     }],
   });
@@ -402,8 +421,10 @@ const Dashboard = () => {
     datasets: [{
       label: 'Amount',
       data: topSubCategories.map(([, amount]) => amount),
-      backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue fill
-      borderColor: 'rgba(59, 130, 246, 1)', // Solid blue border
+      // backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue fill
+      // borderColor: 'rgba(59, 130, 246, 1)', // Solid blue border
+      backgroundColor: 'rgba(139, 92, 246, 0.2)', // Purple-400
+      borderColor: 'rgba(139, 92, 246, 1)', // Purple-600
       borderWidth: 2,
     }],
   });
@@ -500,17 +521,17 @@ const Dashboard = () => {
     // Define the allowed categories from the dropdown
     const allowedCategories = [
       'Food & Dining',
-      'Shopping',
       'Transportation',
-      'Entertainment',
-      'Bills & Utilities',
-      'Health & Fitness',
-      'Travel',
-      'Education',
+      'Shopping',
+      'Housing',
       'Personal Care',
-      'Gifts & Donations',
-      'Investments',
-      'Others'
+      'Entertainment',
+      'Healthcare',
+      'Education',
+      'Miscellaneous',
+      'Debt',
+      'Taxes & Insurance',
+      'Others',
     ];
 
     // Filter categories to only include allowed ones
@@ -534,8 +555,10 @@ const Dashboard = () => {
         {
           label: 'Budget',
           data: budgets,
-          backgroundColor: 'rgba(34, 197, 94, 0.2)', // Light green
-          borderColor: 'rgba(34, 197, 94, 1)', // Green
+          // backgroundColor: 'rgba(34, 197, 94, 0.2)', // Light green
+          // borderColor: 'rgba(34, 197, 94, 1)', // Green
+          backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue-200
+          borderColor: 'rgba(59, 130, 246, 1)', // Blue-500
           borderWidth: 2,
           barPercentage: 0.7,
           categoryPercentage: 0.9,
@@ -543,8 +566,11 @@ const Dashboard = () => {
         {
           label: 'Spent',
           data: spent,
-          backgroundColor: 'rgba(239, 68, 68, 0.2)', // Light red
-          borderColor: 'rgba(239, 68, 68, 1)', // Red
+          // backgroundColor: 'rgba(239, 68, 68, 0.2)', // Light red
+          // borderColor: 'rgba(239, 68, 68, 1)', // Red
+
+          backgroundColor: 'rgba(251, 146, 60, 0.2)', // Orange-200
+          borderColor: 'rgba(251, 146, 60, 1)', // Orange-500
           borderWidth: 2,
           barPercentage: 0.7,
           categoryPercentage: 0.9,
@@ -578,8 +604,13 @@ const Dashboard = () => {
         {
           label: 'Credit Card Expenses',
           data: sortedDates.map(date => groupedData[date]),
-          backgroundColor: 'rgba(99, 102, 241, 0.1)',
-          borderColor: 'rgba(99, 102, 241, 1)',
+          // backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          // borderColor: 'rgba(99, 102, 241, 1)',
+          backgroundColor: 'rgba(248, 113, 113, 0.1)',
+          borderColor: 'rgba(220, 38, 38, 1)',
+      // deep yellow border
+          
+          
           borderWidth: 2,
           fill: true,
           tension: 0.4,
@@ -733,24 +764,68 @@ const Dashboard = () => {
       },
     }
   };
-
   const calculateSummary = () => {
-    console.log("expenses", expenses);
-    if (!expenses.length) return { total: 0, topCategory: { name: 'N/A', amount: 0 }, highest: 0 };
+    // console.log("expenses", expenses);
+    if (!expenses.length) return { 
+      total: 0, 
+      topCategory: { name: 'N/A', amount: 0 },
+      topSingleTransaction: { category: 'N/A', subCategory: 'N/A', amount: 0 },
+      highest: 0 
+    };
     
     const total = expenses.reduce((sum, exp) => sum + Math.abs(exp.amount), 0);
-    const highest = Math.max(...expenses.map(exp => Math.abs(exp.amount)));
+    
+    // Find the transaction with the highest amount
+    const highestTransaction = expenses.reduce((max, current) => 
+      Math.abs(current.amount) > Math.abs(max.amount) ? current : max, expenses[0]);
+    
+    const highest = Math.abs(highestTransaction.amount);
+    
+    // Calculate top categories
+    const categoryMap = {};
+    expenses.forEach(exp => {
+      const category = exp.category;
+      if (!categoryMap[category]) categoryMap[category] = 0;
+      categoryMap[category] += Math.abs(exp.amount);
+    });
+    
+    const topCategories = Object.entries(categoryMap)
+      .sort((a, b) => b[1] - a[1]);
+    
     const topCategory = topCategories[0] || ['N/A', 0];
+    
+    // console.log("top category = ", topCategory);
+    // console.log("highest transaction = ", highestTransaction);
     
     return { 
       total, 
       topCategory: { name: topCategory[0], amount: topCategory[1] },
+      topSingleTransaction: { 
+        category: highestTransaction.category, 
+        subCategory: highestTransaction.sub_category, 
+        notes:highestTransaction.notes,
+        amount: Math.abs(highestTransaction.amount) 
+      },
       highest 
     };
   };
+  // const calculateSummary = () => {
+  //   console.log("expenses", expenses);
+  //   if (!expenses.length) return { total: 0, topCategory: { name: 'N/A', amount: 0 }, highest: 0 };
+    
+  //   const total = expenses.reduce((sum, exp) => sum + Math.abs(exp.amount), 0);
+  //   const highest = Math.max(...expenses.map(exp => Math.abs(exp.amount)));
+  //   const topCategory = topCategories[0] || ['N/A', 0];
+  //   console.log("top category = ", topCategory);
+  //   return { 
+  //     total, 
+  //     topCategory: { name: topCategory[0], amount: topCategory[1] },
+  //     highest 
+  //   };
+  // };
 
   const summary = calculateSummary();
-
+  // console.log("summary = ", summary);
   const getTimeRangeLabel = () => {
     if (customRange === 'last7') return 'Weekely';
     if (customRange === 'last30') return 'Monthly';
@@ -844,7 +919,7 @@ const Dashboard = () => {
           <div className="card-content">
             <h3>Highest Expense</h3>
             <p className="amount">₹{summary.highest.toLocaleString()}</p>
-            <p className="label">Single Transaction</p>
+            <p className="label">{summary.topSingleTransaction.subCategory} (Single Transaction)</p>
           </div>
         </div>
         <div className="summary-card balance">
@@ -856,7 +931,20 @@ const Dashboard = () => {
             <p className="amount" style={{ color: currentBalance >= 0 ? '#22c55e' : '#ef4444' }}>
               ₹{Math.abs(currentBalance).toLocaleString()}
             </p>
-            <p className="label">{currentBalance >= 0 ? 'Positive Balance' : 'Negative Balance'}</p>
+            <p className="label">{currentBalance >= 0 ? 'Positive Balance' : 'Warning Negative Balance'}</p>
+            <div className="bank-balances-tooltip">
+              {Object.entries(bankBalances).map(([bank, bal]) => (
+                <div key={bank} className="bank-balance-item">
+                  <div className="bank-info">
+                    <FaUniversity className="bank-icon" />
+                    <span className="bank-name">{bank}</span>
+                  </div>
+                  <span className={`bank-amount ${bal < 500 ? 'bank-amount--red' : 'bank-amount--green'}`}>
+                    ₹{bal.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -1087,9 +1175,9 @@ const Dashboard = () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                  legend: {
-                    display: false
-                  },
+                  // legend: {
+                  //   display: false
+                  // },
                   tooltip: {
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     titleColor: '#1f2937',

@@ -114,7 +114,10 @@ const CreditCardTable = ({ transactions, onDeleteTransaction, onUpdateTransactio
               <td className="emi-column">
                 <div className="badge badge-category">
                   <FaCalendarAlt />
-                  {transaction.emi_duration ? `${transaction.emi_duration} months` : 'N/A'}
+                  {/* {transaction.emi_duration ? `${transaction.emi_duration} months` : 'N/A'} */}
+                  {transaction.emi_duration 
+                ? `${transaction.emi_duration} ${transaction.emi_duration === 1 ? 'month' : 'months'}` 
+                : 'N/A'}
                 </div>
               </td>
               <td className="notes-column">
