@@ -1,0 +1,5 @@
+id,amount,date_time,timestamp,emi_duration,bankname,notes
+1,25625.0,2025-04-05 00:00:00.000000,2025-04-22 00:11:21.040248,1,ICICI Credit Card,emergency self transfer | 650 rupees interest 
+2,5753.0,2025-04-07 00:00:00.000000,2025-04-22 00:12:11.563386,1,ICICI Credit Card,DEL to HYD flight ticket
+3,17599.0,2025-04-09 00:00:00.000000,2025-04-22 00:12:56.070984,1,ICICI Credit Card,ACER monitor
+4,26490.0,2025-04-12 00:00:00.000000,2025-04-22 00:16:33.100970,9,SBI Credit Card,Samsung Refrigerator 

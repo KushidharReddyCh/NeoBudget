@@ -27,6 +27,8 @@ const EditIncomeForm = ({ income, onClose, onUpdate }) => {
     'Borrowed from Family',
     'Freelance Income',
     'Rental Income',
+    'Lent to Friends',
+    'Lent Adjustment',
     'Dividends / Investments',
     'Others'
   ];
@@ -37,6 +39,7 @@ const EditIncomeForm = ({ income, onClose, onUpdate }) => {
     'Axis Bank',
     'Liquid Cash',
     'UPI Lite',
+    'Lent Balance',
     'Other'
   ];
 

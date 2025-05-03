@@ -1,0 +1,9 @@
+id,category,amount,date_time,timestamp,notes,transaction_type,bankname,source
+4,Others,1.0,2025-04-01 00:00:00.000000,2025-04-25 19:17:22.485000,Self Transfer for Initial payments,credit,Axis Bank,self transfer 
+5,Others,19448.0,2025-04-01 00:00:00.000000,2025-04-25 19:15:40.136000, Bulk Deposits to adjust the equations,credit,SBI Bank,Self Transfer
+6,Other,15480.0,2025-04-01 00:00:00.000000,2025-04-26 00:45:21.452734,Bulk Deposits to adjust the equations ,credit,Union Bank,Self Transfer
+7,Salary,133187.0,2025-04-01 00:00:00.000000,2025-04-30 13:29:41.866000,NA,credit,SBI Bank,Grey Orange
+8,Other,2084.0,2025-04-01 00:00:00.000000,2025-04-26 00:47:10.770494,Self Transfer for Initial payments,credit,Union Bank,Self Transfer
+12,Other,18000.0,2025-04-01 00:00:00.000000,2025-04-30 19:00:27.430303,Self transfer to MOM,credit,Union Bank,Bulk Deposits to adjust the equations
+9,Other,10.0,2025-04-25 00:00:00.000000,2025-04-26 02:08:27.343772,,credit,Liquid Cash,Liquid Cash
+10,Others,132.0,2025-04-25 00:00:00.000000,2025-04-25 20:43:16.227000,Amazon pay balance + Paytm + Phone Pe upi,credit,UPI Lite,upi lites

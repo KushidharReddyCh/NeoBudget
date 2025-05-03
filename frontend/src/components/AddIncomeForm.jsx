@@ -120,6 +120,8 @@ const AddIncomeForm = ({ onIncomeAdded }) => {
               <option value="Borrowed from Family">Borrowed from Family</option>
               <option value="Freelance Income">Freelance Income</option>
               <option value="Dividends / Investments">Dividends / Investments</option>
+              <option value="Lent to Friends"> Lent to Friends</option>
+              <option value="Lent Adjustment"> Lent Adjustment</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -141,6 +143,7 @@ const AddIncomeForm = ({ onIncomeAdded }) => {
               <option value="Axis Bank">Axis Bank</option>
               <option value="Liquid Cash">Liquid Cash</option>
               <option value="UPI Lite">UPI Lite</option>
+              <option value="Lent Balance">Lent Balance</option>
               <option value="Other">Other</option>
             </select>
           </div>

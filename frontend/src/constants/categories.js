@@ -50,6 +50,8 @@ export const subCategories = {
   ],
   'Debt': [
     'Credit Card',
+    'Credit Card Fees',
+    'Intrest',
     'Friends & Family',
     'Others'
   ],
@@ -63,6 +65,8 @@ export const subCategories = {
   'Taxes & Insurance': [
     'Taxes',
     'Insurance',
+    'Income Tax',
+    'Provident Fund',
     'Others'
   ],
   'Shopping': [

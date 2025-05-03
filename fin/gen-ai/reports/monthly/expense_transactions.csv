@@ -1,0 +1,72 @@
+id,category,sub_category,amount,date_time,timestamp,notes,transaction_type,bankname
+20,Housing,Money Transfer,2000.0,2025-04-01 00:00:00.000000,2025-04-22 00:06:29.705807,Sent to BRO,debit,Union Bank
+21,Housing,Rent,9000.0,2025-04-01 00:00:00.000000,2025-04-30 05:22:13.651000,Rent payment to A 505 room owner,debit,Union Bank
+19,Entertainment,Subscriptions,29.0,2025-04-03 00:00:00.000000,2025-04-22 00:06:01.733530,Jio Cinema Subscription ,debit,Union Bank
+18,Housing,Money Transfer,1000.0,2025-04-05 00:00:00.000000,2025-04-22 00:04:58.436110,Sent to BRO,debit,Union Bank
+16,Housing,Money Transfer,1000.0,2025-04-09 00:00:00.000000,2025-04-22 00:02:14.832280,Sent to BRO,debit,Union Bank
+17,Entertainment,Subscriptions,249.0,2025-04-09 00:00:00.000000,2025-04-22 00:03:37.216323,Amazon Prime Annual Subscription . Only Shopping no Prime vedio,debit,Union Bank
+14,Healthcare,Medicine,182.0,2025-04-11 00:00:00.000000,2025-04-22 00:00:00.314420,mom doctor visit,debit,Union Bank
+15,Miscellaneous,Accessories,165.0,2025-04-11 00:00:00.000000,2025-04-22 00:01:41.813271,Zepto - Double ended tape ,debit,Union Bank
+13,Housing,Maintenance,2850.0,2025-04-12 00:00:00.000000,2025-04-21 23:59:14.515513,Maintenance Galaxy Towers ,debit,SBI Bank
+12,Housing,Money Transfer,1000.0,2025-04-13 00:00:00.000000,2025-04-21 23:58:20.449389,Sent to BRO,debit,SBI Bank
+22,Housing,Electricity,480.0,2025-04-16 00:00:00.000000,2025-04-22 00:09:03.214640,Electricity A505,debit,Union Bank
+9,Entertainment,Subscriptions,499.0,2025-04-17 00:00:00.000000,2025-04-21 23:55:42.275814,Hotstar annual subscription ,debit,SBI Bank
+10,Shopping,Stationery(Personal),1809.0,2025-04-17 00:00:00.000000,2025-04-21 23:56:53.328256,Amazon Deskmat from daily objects,debit,SBI Bank
+11,Housing,Money Transfer,1000.0,2025-04-17 00:00:00.000000,2025-04-21 23:57:27.765635,Sent to BRO,debit,SBI Bank
+6,Housing,Groceries,301.0,2025-04-18 00:00:00.000000,2025-04-21 23:53:05.856872,paste + oil,debit,SBI Bank
+7,Housing,Money Transfer,1000.0,2025-04-18 00:00:00.000000,2025-04-21 23:53:36.365415,Sent to BRO,debit,SBI Bank
+8,Housing,Household Items,175.0,2025-04-18 00:00:00.000000,2025-04-25 19:05:19.422000,Amazon - Fridge Store Boxes.,debit,Union Bank
+5,Shopping,Home Essentials,506.0,2025-04-19 00:00:00.000000,2025-04-21 23:52:26.457349,Amazon - Fridge Boxes,debit,SBI Bank
+1,Healthcare,Medicine,154.0,2025-04-21 00:00:00.000000,2025-04-21 23:48:40.732804,vomitings & sun stroke ,debit,SBI Bank
+2,Food & Dining,Instant Groceries,138.0,2025-04-21 00:00:00.000000,2025-04-21 23:49:34.801543,ors packets + lassi,debit,SBI Bank
+3,Transportation,Bike RAPIDO,113.0,2025-04-21 00:00:00.000000,2025-04-21 23:50:24.738349,Nagloe metro to Pocharam,debit,SBI Bank
+4,Transportation,CAR RAPIDO,486.0,2025-04-21 00:00:00.000000,2025-04-21 23:51:12.328113,Pocharam to Jerry House,debit,SBI Bank
+23,Education,Educational Subscriptions,1039.0,2025-04-22 00:00:00.000000,2025-04-22 00:32:56.386449,Udemy Monthly Subscription (for march)- Credit Card Bill payment ,debit,SBI Bank
+24,Transportation,Flight,2.0,2025-04-22 00:00:00.000000,2025-04-22 00:33:19.120119,HYD Airport lounge on 16th March - HYD Airport lounge on 16th March - Credit Card Bill Payment,debit,SBI Bank
+25,Transportation,Flight,4764.0,2025-04-22 00:00:00.000000,2025-04-22 00:34:08.407577,HYD to DELHI - Credit Card bill payment,debit,SBI Bank
+26,Transportation,CAR RAPIDO,487.0,2025-04-22 00:00:00.000000,2025-04-22 14:07:15.780362,Pocharam to GurramGuda,debit,SBI Bank
+27,Housing,Money Transfer,200.0,2025-04-22 00:00:00.000000,2025-04-22 21:41:35.323756,Sent to BRO,debit,Union Bank
+28,Transportation,Bike RAPIDO,300.0,2025-04-22 00:00:00.000000,2025-04-22 21:42:00.733671,gurram guda to pocharam,debit,SBI Bank
+29,Housing,Money Transfer,3000.0,2025-04-23 00:00:00.000000,2025-04-23 20:30:28.645717,Sent to MOM,debit,SBI Bank
+30,Housing,Money Transfer,1000.0,2025-04-25 00:00:00.000000,2025-04-25 22:03:55.849969,Sent to BRO,debit,Union Bank
+31,Housing,Groceries,180.0,2025-04-27 00:00:00.000000,2025-04-27 23:03:45.822573,Milk 2 liters,debit,Union Bank
+32,Healthcare,Gym Diet,2427.0,2025-04-27 00:00:00.000000,2025-04-27 18:16:51.567000,"Quaker Pouch - 1kg: ₹149.00  
+Nutraj Flax Seeds - 100g: ₹49.00  
+Nutraj Sunflower Seeds - 100g: ₹49.00  
+Nutraj Chia Seeds - 100g: ₹148.00  
+Dabur Honey - 500g: ₹215.00  
+Nutraj Californian Almonds - 1kg: ₹899.00  
+Apis Arabian Dates - 500g: ₹149.00 
+ HLty Roasted Watermelon - 100g: ₹95.00  
+Nutraj Pumpkin Seeds - 100g: ₹49.00  
+Hershey’s Genut - 200g: ₹89.00  
+Cashews + Walnuts: ₹676.00  
+Discount : 140
+Total: ₹2427.00",debit,SBI Bank
+33,Healthcare,Gym Diet,42.0,2025-04-27 00:00:00.000000,2025-04-27 18:16:59.108000,eggs,debit,Union Bank
+34,Healthcare,Gym Diet,210.0,2025-04-27 00:00:00.000000,2025-04-27 18:17:08.807000,fruits,debit,Union Bank
+35,Housing,Groceries,605.0,2025-04-27 00:00:00.000000,2025-04-27 18:03:55.395000,"Urad Gota: ₹71.83  
+Basmati Rice: ₹90.84  
+Idlirava: ₹26.00  
+Jeera: ₹39.60  
+Rajma - 100g: ₹19.00  
+SL Sugar: ₹36.43  
+Bingo Tedhe Medhe - 75g: ₹49.00  
+Sunfeast Bourbon - 111.6g: ₹36.00  
+Vim Double Power - 500ml: ₹87.50  
+Freedom Sunflower Oil - 1L: ₹149.00  
+Total: ₹605.20",debit,SBI Bank
+36,Shopping,Home Essentials,776.0,2025-04-27 00:00:00.000000,2025-04-27 18:05:04.067000,"Fevicol Mreasy FQB: ₹54.00  
+PL Sou Mason Pet Jar: ₹99.00  
+Me Popcorn Bowl 5.5”: ₹29.00 
+ Me Orion Bowl 4”: ₹29.00  
+Me Shanki 2234 Bowl: ₹29.00  
+PL Ezee Jar W Spoon (1st): ₹69.00  
+PL Ezee Jar W Spoon (2nd): ₹69.00  
+Glass Jar 4pc Set: ₹199.00  
+PL Spray Pump 1200ml: ₹199.00  
+Total: ₹776.00",debit,SBI Bank
+37,Personal Care,Hair Cut,590.0,2025-04-28 00:00:00.000000,2025-04-28 21:10:06.306876,Hair Cut + Beard,debit,SBI Bank
+38,Healthcare,Gym Diet,140.0,2025-04-28 00:00:00.000000,2025-04-28 21:10:22.048302,eggs,debit,Union Bank
+39,Entertainment,Events / Concerts,7036.0,2025-04-29 00:00:00.000000,2025-04-29 20:24:00.214097,IPL tickets srh vs kkr,debit,SBI Bank
+40,Housing,Money Transfer,1000.0,2025-04-29 00:00:00.000000,2025-04-30 10:50:39.064190,Sent to BRO,debit,SBI Bank

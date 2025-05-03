@@ -474,7 +474,7 @@ const Dashboard = () => {
       const date = new Date(income.date_time);
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       if (groupedData[key]) {
-        groupedData[key].income += Math.abs(income.amount);
+        groupedData[key].income += income.amount;
       }
     });
 
