@@ -1338,8 +1338,8 @@ const Dashboard = () => {
   };
 
   const getAmountColor = (amount) => {
-    if (amount >= 10000) return '#ef4444'; // Red for high amounts
-    if (amount >= 5000) return '#f97316';  // Orange for medium amounts
+    if (amount >= 2500) return '#ef4444'; // Red for high amounts
+    if (amount >= 500) return '#f97316';  // Orange for medium amounts
     return '#22c55e';                      // Green for low amounts
   };
 
@@ -2296,9 +2296,9 @@ const Dashboard = () => {
               <div className="transaction-content">
                 <div className="transaction-details">
                   <div className="detail-item info-card">
-                    <div className="detail-icon-wrapper">
+                    {/* <div className="detail-icon-wrapper">
                       <FaInfoCircle />
-                    </div>
+                    </div> */}
                     <div className="info-content">
                       <div className="info-row">
                         <span className="info-label">Category:</span>
@@ -2330,9 +2330,9 @@ const Dashboard = () => {
 
                   {selectedExpense.notes && (
                     <div className="detail-item notes">
-                      <div className="detail-icon-wrapper">
+                      {/* <div className="detail-icon-wrapper">
                         <FaInfoCircle />
-                      </div>
+                      </div> */}
                       <div className="detail-content">
                         <div className="detail-label">Notes</div>
                         <div className="detail-value">{selectedExpense.notes}</div>
@@ -2828,9 +2828,9 @@ const Dashboard = () => {
             <div className="transaction-content">
               <div className="transaction-details">
                 <div className="detail-item info-card">
-                  <div className="detail-icon-wrapper">
+                  {/* <div className="detail-icon-wrapper">
                     <FaInfoCircle />
-                  </div>
+                  </div> */}
                   <div className="info-content">
                     <div className="info-row">
                       <span className="info-label">Category:</span>
@@ -2862,9 +2862,9 @@ const Dashboard = () => {
 
                 {selectedTransaction.notes && (
                   <div className="detail-item notes">
-                    <div className="detail-icon-wrapper">
+                    {/* <div className="detail-icon-wrapper">
                       <FaInfoCircle />
-                    </div>
+                    </div> */}
                     <div className="detail-content">
                       <div className="detail-label">Notes</div>
                       <div className="detail-value">{selectedTransaction.notes}</div>

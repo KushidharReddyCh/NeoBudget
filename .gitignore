@@ -11,3 +11,5 @@ blog/
 package-lock.json
 package.json
 fin/finance.db
+node_modules/
+frontend/node_modules/
