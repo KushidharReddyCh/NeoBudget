@@ -9,7 +9,7 @@ const IncomeTable = ({ incomes, onDeleteIncome, onUpdateIncome }) => {
   const [viewingIncomeId, setViewingIncomeId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
-  const itemsPerPage = 7;
+  const itemsPerPage = 25;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

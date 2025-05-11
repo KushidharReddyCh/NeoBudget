@@ -7,7 +7,7 @@ const ExpenseTable = ({ expenses, onDeleteExpense, onUpdateExpense }) => {
   const [editingExpense, setEditingExpense] = useState(null);
   const [viewingExpenseId, setViewingExpenseId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
+  const itemsPerPage = 25;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

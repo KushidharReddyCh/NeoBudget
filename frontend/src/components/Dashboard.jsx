@@ -41,16 +41,12 @@ ChartJS.register(
   Filler
 );
 
-const Dashboard = () => {
+const Dashboard = ({ customRange }) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chartType, setChartType] = useState("line");
   const [timeRange, setTimeRange] = useState("month");
-  const [customRange, setCustomRange] = useState(() => {
-    const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
-  });
   const [categoryData, setCategoryData] = useState({});
   const [weeklyTrends, setWeeklyTrends] = useState([]);
   const [topCategories, setTopCategories] = useState([]);
@@ -1407,41 +1403,28 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="header-title-group">
-          <FaChartArea className="header-icon" />
-          <h1>Expense Trend</h1>
-          <span className="time-separator">|</span>
+      {/* <div className="dashboard-header">
+        <div className="dashboard-title">
+          <h1>Dashboard</h1>
           <span className="time-label">{getTimeRangeLabel()}</span>
         </div>
         <div className="dashboard-controls">
-          <select
-            value={customRange}
-            onChange={(e) => setCustomRange(e.target.value)}
-            className="time-range-select"
-          >
-            <option value="last7">Last 7 Days</option>
-            <option value="last30">Last 30 Days</option>
-            <option value="last90">Last 90 Days</option>
-            <option value="last365">Last Year</option>
-            <optgroup label="Monthly">
-              {getLastSixMonths().map((month) => (
-                <option key={month.value} value={month.value}>
-                  {month.label}
-                </option>
-              ))}
-            </optgroup>
-          </select>
-          {/* <select
-            value={chartType}
-            onChange={(e) => setChartType(e.target.value)}
-            className="chart-type-select"
-          >
-            <option value="line">Line Graph</option>
-            <option value="bar">Bar Graph</option>
-          </select> */}
+          <div className="chart-type-selector">
+            <button
+              className={chartType === "line" ? "active" : ""}
+              onClick={() => setChartType("line")}
+            >
+              Line
+            </button>
+            <button
+              className={chartType === "bar" ? "active" : ""}
+              onClick={() => setChartType("bar")}
+            >
+              Bar
+            </button>
+          </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="summary-cards">
         <div className="summary-card total">
@@ -1949,9 +1932,25 @@ const Dashboard = () => {
 
       <div className="charts-grid">
         <div className="main-chart">
-          <h2>
-            <FaChartLine /> Expense Trend
-          </h2>
+          <div className="chart-header">
+            <h2>
+              <FaChartLine /> Expense Trend
+            </h2>
+            <div className="chart-type-selector">
+              <button
+                className={chartType === "line" ? "active" : ""}
+                onClick={() => setChartType("line")}
+              >
+                Line
+              </button>
+              <button
+                className={chartType === "bar" ? "active" : ""}
+                onClick={() => setChartType("bar")}
+              >
+                Bar
+              </button>
+            </div>
+          </div>
           <div className="chart-container">
             {chartType === "line" && (
               <Line data={prepareChartData()} options={chartOptions} />
@@ -2278,6 +2277,56 @@ const Dashboard = () => {
             })}
           </div>
         </div>
+
+              {/* Weekly Transactions Modal */}
+      {showWeekTransactionsModal && (
+        <div className="transaction-panel-overlay" onClick={() => setShowWeekTransactionsModal(false)}>
+          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+            <div className="transaction-header">
+              <div className="transaction-title">
+                <FaCalendarAlt />
+                Weekly Transactions
+              </div>
+              <button className="transaction-close" onClick={() => setShowWeekTransactionsModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="transaction-content">
+              <div className="category-transactions-table-container">
+                <div className="category-transactions-table">
+                  <div className="table-body">
+                    {selectedWeekTransactions.map((transaction, index) => (
+                      <div 
+                        key={transaction.id} 
+                        className="table-row"
+                        onClick={() => handleTransactionClick(transaction)}
+                      >
+                        <div className="table-cell serial">
+                          {index + 1}
+                        </div>
+                        <div className="table-cell subcategory">
+                          {transaction.sub_category}
+                        </div>
+                        <div className="table-cell date">
+                          {new Date(transaction.date_time).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="table-cell amount" style={{ color: getAmountColor(Math.abs(transaction.amount)) }}>
+                          ₹{Math.abs(transaction.amount).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
         {/* Transaction Details Panel */}
         {showExpenseModal && selectedExpense && (
@@ -2871,56 +2920,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Weekly Transactions Modal */}
-      {showWeekTransactionsModal && (
-        <div className="transaction-panel-overlay" onClick={() => setShowWeekTransactionsModal(false)}>
-          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
-            <div className="transaction-header">
-              <div className="transaction-title">
-                <FaCalendarAlt />
-                Weekly Transactions
-              </div>
-              <button className="transaction-close" onClick={() => setShowWeekTransactionsModal(false)}>
-                <FaTimes />
-              </button>
-            </div>
-            
-            <div className="transaction-content">
-              <div className="category-transactions-table-container">
-                <div className="category-transactions-table">
-                  <div className="table-body">
-                    {selectedWeekTransactions.map((transaction, index) => (
-                      <div 
-                        key={transaction.id} 
-                        className="table-row"
-                        // onClick={() => handleTransactionClick(transaction)}
-                      >
-                        <div className="table-cell serial">
-                          {index + 1}
-                        </div>
-                        <div className="table-cell subcategory">
-                          {transaction.sub_category}
-                        </div>
-                        <div className="table-cell date">
-                          {new Date(transaction.date_time).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </div>
-                        <div className="table-cell amount" style={{ color: getAmountColor(Math.abs(transaction.amount)) }}>
-                          ₹{Math.abs(transaction.amount).toLocaleString()}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
