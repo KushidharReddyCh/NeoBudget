@@ -1,6 +1,6 @@
 .table-wrapper {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   /* margin: 1rem 0; */
 }
 

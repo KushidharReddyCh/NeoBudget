@@ -71,6 +71,8 @@ const Dashboard = ({ customRange }) => {
   const [isSlidingOut, setIsSlidingOut] = useState(false);
   const [selectedWeekTransactions, setSelectedWeekTransactions] = useState([]);
   const [showWeekTransactionsModal, setShowWeekTransactionsModal] = useState(false);
+  const [selectedBankTransactions, setSelectedBankTransactions] = useState([]);
+  const [showBankTransactionsModal, setShowBankTransactionsModal] = useState(false);
 
   const colors = [
     { color: '#3b82f6', rgb: '59, 130, 246' },  // Blue
@@ -1384,6 +1386,46 @@ const Dashboard = ({ customRange }) => {
     setShowWeekTransactionsModal(true);
   };
 
+  const handleBankClick = (bank) => {
+    const now = new Date();
+    let startDate, endDate = new Date();
+
+    if (customRange === "last7") {
+      startDate = new Date(now.setDate(now.getDate() - 7));
+    } else if (customRange === "last30") {
+      startDate = new Date(now.setDate(now.getDate() - 30));
+    } else if (customRange === "last90") {
+      startDate = new Date(now.setDate(now.getDate() - 90));
+    } else if (customRange === "last365") {
+      startDate = new Date(now.setDate(now.getDate() - 365));
+    } else if (customRange.includes("-")) {
+      const [year, month] = customRange.split("-").map(Number);
+      startDate = new Date(year, month - 1, 1);
+      endDate = new Date(year, month, 0);
+    }
+
+    // Filter both income and expense transactions for the selected bank
+    const bankExpenses = expenses.filter(expense => 
+      expense.bankname === bank && 
+      new Date(expense.date_time) >= startDate && 
+      new Date(expense.date_time) <= endDate
+    ).map(expense => ({ ...expense, type: 'expense' })); // Add type to identify source
+
+    const bankIncome = incomeData.filter(income => 
+      income.bankname === bank && 
+      new Date(income.date_time) >= startDate && 
+      new Date(income.date_time) <= endDate
+    ).map(income => ({ ...income, type: 'income' })); // Add type to identify source
+
+    // Combine and sort transactions by date
+    const allTransactions = [...bankExpenses, ...bankIncome].sort((a, b) => 
+      new Date(b.date_time) - new Date(a.date_time)
+    );
+
+    setSelectedBankTransactions(allTransactions);
+    setShowBankTransactionsModal(true);
+  };
+
   // Add this function to handle week clicks
   if (loading)
     return (
@@ -1481,7 +1523,7 @@ const Dashboard = ({ customRange }) => {
                           fontSize: '0.9em',
                           color: '#6b7280'
                         }} />
-                        <span>Week {week}</span>
+                        <span>WEEK {week}</span>
                       </span>
                       <span className="week-amount" style={{ 
                         color: amount === "NA" ? '#6b7280' : (isHighSpending ? '#ef4444' : '#22c55e'),
@@ -1553,16 +1595,27 @@ const Dashboard = ({ customRange }) => {
                 ? "Positive Balance"
                 : "Warning Negative Balance"}
             </p>
+            {/* <hr></hr> */}
             <div className="bank-balances-tooltip">
               {Object.entries(bankBalances).map(([bank, bal]) => (
-                <div key={bank} className="bank-balance-item" style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '8px 12px',
-                  borderBottom: '1px solid #e5e7eb',
-                  gap: '16px'
-                }}>
+                <div 
+                  key={bank} 
+                  className="bank-balance-item" 
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 12px',
+                    borderBottom: '1px solid #e5e7eb',
+                    gap: '16px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease',
+                    ':hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.05)'
+                    }
+                  }}
+                  onClick={() => handleBankClick(bank)}
+                >
                   <div className="bank-info" style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -1577,7 +1630,7 @@ const Dashboard = ({ customRange }) => {
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
-                    }}>{bank}</span>
+                    }}>{bank.toUpperCase()}</span>
                   </div>
                   <span
                     className={`bank-amount ${
@@ -1600,7 +1653,7 @@ const Dashboard = ({ customRange }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '24px',
-              marginTop: '20px',  // Changed from 12px to 15px
+              // marginTop: '20px',  // Changed from 12px to 15px
               padding: '8px',
               borderTop: '1px solid #e5e7eb',
               minHeight: '48px'
@@ -1641,7 +1694,7 @@ const Dashboard = ({ customRange }) => {
                 <div className="indicator-row">
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Savings Rate</div>
+                      <div className="indicator-label">SAVINGS RATE</div>
                       <div className="indicator-icon">
                         <FaChartLine />
                       </div>
@@ -1801,7 +1854,7 @@ const Dashboard = ({ customRange }) => {
 
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Budget Score</div>
+                      <div className="indicator-label">BUDGET SCORE</div>
                       <div className="indicator-icon">
                         <FaWallet />
                       </div>
@@ -1848,7 +1901,7 @@ const Dashboard = ({ customRange }) => {
 
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Credit Score</div>
+                      <div className="indicator-label">CREDIT SCORE</div>
                       <div className="indicator-icon">
                         <FaChartBar />
                       </div>
@@ -1881,7 +1934,7 @@ const Dashboard = ({ customRange }) => {
                 <div className="indicator-row">
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Emergency Fund</div>
+                      <div className="indicator-label">EMERGENCY FUND</div>
                       <div className="indicator-icon">
                         <FaMoneyBillWave />
                       </div>
@@ -1896,7 +1949,7 @@ const Dashboard = ({ customRange }) => {
 
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Debt-to-Income</div>
+                      <div className="indicator-label">DEBT-TO-INCOME</div>
                       <div className="indicator-icon">
                         <FaLayerGroup />
                       </div>
@@ -1911,7 +1964,7 @@ const Dashboard = ({ customRange }) => {
 
                   <div className="indicator">
                     <div className="indicator-header">
-                      <div className="indicator-label">Investment Rate</div>
+                      <div className="indicator-label">INVESTMENT RATE</div>
                       <div className="indicator-icon">
                         <FaChartLine />
                       </div>
@@ -2219,7 +2272,7 @@ const Dashboard = ({ customRange }) => {
                         onClick={() => handleCategoryClick(category)}
                         style={{ cursor: 'pointer' }}
                       >
-                        {category}
+                        {category.toUpperCase()}
                       </span>
                     </div>
 
@@ -2241,7 +2294,7 @@ const Dashboard = ({ customRange }) => {
 
                   <div className="top-expense-info">
                     <div className="top-expense-row">
-                      <span className="top-expense-label">Top Expense:</span>
+                      <span className="top-expense-label">TOP EXPENSE:</span>
                       <span 
                         className="top-expense-amount"
                         onClick={() => handleExpenseClick(data.topExpense.id)}
@@ -2925,6 +2978,88 @@ const Dashboard = ({ customRange }) => {
           </div>
         </div>
       )}
+
+      {/* Bank Transactions Modal */}
+      {showBankTransactionsModal && (
+        <div className="transaction-panel-overlay" onClick={() => setShowBankTransactionsModal(false)}>
+          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+            <div className="transaction-header">
+              <div className="transaction-title">
+                <FaUniversity />
+                Bank Transactions
+              </div>
+              <button className="transaction-close" onClick={() => setShowBankTransactionsModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="transaction-content">
+              <div className="category-transactions-table-container">
+                <div className="category-transactions-table">
+                  <div className="table-body">
+                    {selectedBankTransactions.map((transaction, index) => (
+                      <div 
+                        key={transaction.id} 
+                        className="table-row"
+                        // onClick={() => handleTransactionClick(transaction)}
+                      >
+                        <div className="table-cell serial">
+                          {index + 1}
+                        </div>
+                        <div className="table-cell subcategory">
+                          {transaction.category}
+                          {transaction.sub_category && ` - ${transaction.sub_category}`}
+                        </div>
+                        <div className="table-cell date">
+                          {new Date(transaction.date_time).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="table-cell amount" style={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          justifyContent: 'flex-end'
+                        }}>
+                          <span style={{ 
+                            color: transaction.type === 'expense' ? '#ef4444' : '#22c55e',
+                            fontWeight: '600'
+                          }}>
+                            ₹{Math.abs(transaction.amount).toLocaleString()}
+                          </span>
+                          <span style={{ 
+                            fontSize: '0.8em',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            backgroundColor: transaction.type === 'expense' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                            color: transaction.type === 'expense' ? '#ef4444' : '#22c55e',
+                            fontWeight: '500'
+                          }}>
+                            {transaction.type === 'expense' ? 'Debited' : 'Credited'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="copyright-footer" style={{
+        textAlign: 'center',
+        padding: '20px',
+        backgroundColor: 'rgb(39, 40, 40)',
+        marginTop: '0px',
+        borderTop: '1px solid #e5e7eb',
+        color: 'rgb(255, 255, 255)',
+        fontSize: '0.9em'
+      }}>
+        © {new Date().getFullYear()} All rights reserved to Kushidhar. Contact: kushidhar.dev@gmail.com +91 8688528841
+      </div>
     </div>
   );
 };

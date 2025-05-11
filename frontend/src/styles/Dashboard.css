@@ -275,6 +275,8 @@
 
 /* Bank Balances Display */
 .bank-balances-tooltip {
+  margin-top: 20px;
+  border-top: 1px solid #e2e8f0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -282,7 +284,7 @@
   width: 100%;
   background-color: transparent;
   padding: 0.5rem 0 0 0;
-  margin-top: 0.25rem;
+  /* margin-top: 0.25rem; */
 }
 
 .bank-balance-item {
@@ -579,7 +581,7 @@
     0 0 0 1px rgba(var(--category-rgb), 0.1);
 }
 
-.top-category-item::before {
+/* .top-category-item::before {
   content: '';
   position: absolute;
   top: 0;
@@ -592,7 +594,7 @@
     rgba(var(--category-rgb), 0.7) 100%
   );
   opacity: 0.8;
-}
+} */
 
 .top-category-item::after {
   content: '';
@@ -1364,6 +1366,8 @@
 }
 
 .top-expense-label {
+  /* underline this */
+  /* text-decoration: underline; */
   color: #6b7280;
   font-weight: 500;
   white-space: nowrap;
@@ -2159,7 +2163,7 @@
 
 /* Scrollbar styling */
 .transaction-content::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 .transaction-content::-webkit-scrollbar-track {
@@ -2713,7 +2717,7 @@
 
 /* Scrollbar styles for the table body */
 .table-body::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 .table-body::-webkit-scrollbar-track {

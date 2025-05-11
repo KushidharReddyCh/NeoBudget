@@ -50,28 +50,25 @@ const Navbar = ({ customRange, setCustomRange, getLastSixMonths }) => {
       </div>
       <div className="nav-date-filter">
         <div className="date-filter-content">
-          <FaCalendarAlt className="date-filter-icon" />
-          <div className="date-filter-select-wrapper">
-            <select
-              value={customRange}
-              onChange={(e) => setCustomRange(e.target.value)}
-              className="time-range-select"
-            >
-              <option value="last7">Last 7 Days</option>
-              <option value="last30">Last 30 Days</option>
-              <option value="last90">Last 90 Days</option>
-              <option value="last365">Last Year</option>
-              <optgroup label="Monthly">
-                {getLastSixMonths().map((month) => (
-                  <option key={month.value} value={month.value}>
-                    {month.label}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
-            <FaChevronDown className="select-chevron" />
-            <div className="selected-date-label">{getDateFilterLabel(customRange)}</div>
-          </div>
+          <select
+            value={customRange}
+            onChange={(e) => setCustomRange(e.target.value)}
+            className="time-range-select"
+          >
+            <optgroup label="Monthly">
+              {getLastSixMonths().map((month) => (
+                <option key={month.value} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </optgroup>
+            <option value="last7">Last 7 Days</option>
+            <option value="last30">Last 30 Days</option>
+            <option value="last90">Last 90 Days</option>
+            <option value="last365">Last Year</option>
+          </select>
+          <FaChevronDown className="date-filter-icon" />
+          <div className="selected-date-label">{getDateFilterLabel(customRange)}</div>
         </div>
       </div>
     </nav>
