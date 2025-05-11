@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaCreditCard, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaCreditCard, FaPlus, FaTimes, FaChartLine } from 'react-icons/fa';
 import CreditCardTable from '../components/CreditCardTable';
 import AddCreditCardForm from '../components/AddCreditCardForm';
+import AddCibilScoreForm from '../components/AddCibilScoreForm';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import Toast from '../components/Toast';
@@ -13,9 +14,12 @@ const CreditCardPage = () => {
   const [error, setError] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showCibilForm, setShowCibilForm] = useState(false);
+  const [cibilScore, setCibilScore] = useState(null);
 
   useEffect(() => {
     fetchTransactions();
+    fetchCibilScore();
   }, []);
 
   const showToast = (message, type = 'success') => {
@@ -24,6 +28,23 @@ const CreditCardPage = () => {
 
   const hideToast = () => {
     setToast({ show: false, message: '', type: 'success' });
+  };
+
+  const fetchCibilScore = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/get-current-cibil-score');
+      if (!response.ok) throw new Error('Failed to fetch CIBIL score');
+      const data = await response.json();
+      setCibilScore(data);
+    } catch (err) {
+      console.error('Error fetching CIBIL score:', err);
+    }
+  };
+
+  const handleScoreAdded = (newScore) => {
+    fetchCibilScore();
+    setShowCibilForm(false);
+    showToast('CIBIL score added successfully! ✨');
   };
 
   const fetchTransactions = async () => {
@@ -111,6 +132,21 @@ const CreditCardPage = () => {
                 <FaPlus /> Add Transaction
               </button>
             )}
+            {showCibilForm ? (
+              <button
+                className="add-transaction-btn close"
+                onClick={() => setShowCibilForm(false)}
+              >
+                <FaTimes /> Close
+              </button>
+            ) : (
+              <button
+                className="add-transaction-btn"
+                onClick={() => setShowCibilForm(true)}
+              >
+                <FaChartLine /> Add CIBIL Score
+              </button>
+            )}
           </div>
         </div>
 
@@ -119,6 +155,30 @@ const CreditCardPage = () => {
             <AddCreditCardForm onTransactionAdded={handleTransactionAdded} />
           </div>
         )}
+
+        {showCibilForm && (
+          <div className="form-container">
+            <AddCibilScoreForm onScoreAdded={handleScoreAdded} />
+          </div>
+        )}
+
+        {/* <div className="cibil-score-section">
+          <div className="section-header">
+            <h3>
+              <FaChartLine /> CIBIL Score
+            </h3>
+            <div className="current-score">
+              Current Score: <span className={`score-value ${(() => {
+                if (!cibilScore) return 'na';
+                if (cibilScore.score >= 750) return 'positive';
+                if (cibilScore.score >= 650) return 'neutral';
+                return 'negative';
+              })()}`}>
+                {cibilScore ? cibilScore.score : 'NA'}
+              </span>
+            </div>
+          </div>
+        </div> */}
         
         <CreditCardTable 
           transactions={transactions} 

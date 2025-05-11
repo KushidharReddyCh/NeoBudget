@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,7 +7,6 @@ import {
   PointElement,
   LineElement,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -15,7 +14,6 @@ import {
 } from "chart.js";
 import {
   FaChartLine,
-  FaChartPie,
   FaChartBar,
   FaWallet,
   FaTags,
@@ -23,8 +21,13 @@ import {
   FaCalendarAlt,
   FaChartArea,
   FaUniversity,
+  FaTimes,
+  FaMoneyBillWave,
+  FaLayerGroup,
+  FaInfoCircle,
 } from "react-icons/fa";
 import "../styles/Dashboard.css";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(
   CategoryScale,
@@ -32,7 +35,6 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -45,13 +47,9 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [chartType, setChartType] = useState("line");
   const [timeRange, setTimeRange] = useState("month");
-  // const [customRange, setCustomRange] = useState('last30');
   const [customRange, setCustomRange] = useState(() => {
     const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   });
   const [categoryData, setCategoryData] = useState({});
   const [weeklyTrends, setWeeklyTrends] = useState([]);
@@ -63,6 +61,31 @@ const Dashboard = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [creditCardTransactions, setCreditCardTransactions] = useState([]);
   const [bankBalances, setBankBalances] = useState({});
+  const [savingsRateData, setSavingsRateData] = useState([]);
+  const [savingsRateExpenses, setSavingsRateExpenses] = useState([]);
+  const [savingsRateIncome, setSavingsRateIncome] = useState([]);
+  const [incomeVsExpensesData, setIncomeVsExpensesData] = useState({ income: [], expenses: [] });
+  const [lentBalance, setLentBalance] = useState(5000);
+  const [cibilScore, setCibilScore] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [selectedCategoryTransactions, setSelectedCategoryTransactions] = useState([]);
+  const [showCategoryTransactionsModal, setShowCategoryTransactionsModal] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [isSlidingOut, setIsSlidingOut] = useState(false);
+  const [selectedWeekTransactions, setSelectedWeekTransactions] = useState([]);
+  const [showWeekTransactionsModal, setShowWeekTransactionsModal] = useState(false);
+
+  const colors = [
+    { color: '#3b82f6', rgb: '59, 130, 246' },  // Blue
+    { color: '#ec4899', rgb: '236, 72, 153' },   // Pink
+    { color: '#eab308', rgb: '234, 179, 8' },    // Yellow
+    { color: '#22c55e', rgb: '34, 197, 94' },    // Green
+    { color: '#ef4444', rgb: '239, 68, 68' },    // Red
+    { color: '#a162f7', rgb: '161, 98, 247' },   // Purple
+    { color: '#0ea5e9', rgb: '14, 165, 233' },   // Sky
+    { color: '#f97316', rgb: '249, 115, 22' },   // Orange
+  ];
 
   // Generate last 6 months options
   const getLastSixMonths = () => {
@@ -103,7 +126,15 @@ const Dashboard = () => {
     fetchCurrentBalance();
     fetchCreditCardTransactions();
     fetchBankBalances();
+    fetchLentBalance();
+    fetchCibilScore();
   }, [timeRange, customRange]);
+
+  // Separate useEffect for savings rate and income vs expenses
+  useEffect(() => {
+    fetchSavingsRateData();
+    fetchIncomeVsExpensesData();
+  }, []); // This will run only once when component mounts
 
   // Add event listener for expense updates
   useEffect(() => {
@@ -116,7 +147,7 @@ const Dashboard = () => {
     return () => {
       window.removeEventListener("expenseUpdated", handleExpenseUpdate);
     };
-  }, [timeRange, customRange]);
+  }, [timeRange, customRange]); // Restore the dependencies
 
   const fetchExpenses = async () => {
     try {
@@ -297,18 +328,168 @@ const Dashboard = () => {
     }
   };
 
+  const fetchLentBalance = async () => {
+    try {
+      // This is a placeholder. Replace with actual API call when available
+      // const response = await fetch("http://127.0.0.1:8000/get-lent-balance");
+      // if (!response.ok) throw new Error("Failed to fetch lent balance");
+      // const data = await response.json();
+      // setLentBalance(data.lent_balance);
+      setLentBalance(5000); // Placeholder value
+    } catch (err) {
+      console.error("Error fetching lent balance:", err);
+    }
+  };
+
+  const fetchSavingsRateData = async () => {
+    try {
+      const now = new Date();
+      const endDate = new Date();
+      const startDate = new Date(now.setMonth(now.getMonth() - 11)); // Last 12 months
+
+      const [expenseResponse, incomeResponse] = await Promise.all([
+        fetch(`http://127.0.0.1:8000/get-all-expense-transactions?start_date=${startDate.toISOString().split("T")[0]}&end_date=${endDate.toISOString().split("T")[0]}`),
+        fetch(`http://127.0.0.1:8000/get-all-income-transactions?start_date=${startDate.toISOString().split("T")[0]}&end_date=${endDate.toISOString().split("T")[0]}`)
+      ]);
+
+      if (!expenseResponse.ok || !incomeResponse.ok) 
+        throw new Error("Failed to fetch data for savings rate");
+
+      const expenseData = await expenseResponse.json();
+      const incomeData = await incomeResponse.json();
+
+      setSavingsRateExpenses(expenseData);
+      setSavingsRateIncome(incomeData);
+
+      // Process the data by month
+      const monthlyData = {};
+      
+      // Process expenses
+      expenseData.forEach(expense => {
+        const date = new Date(expense.date_time);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { expenses: 0, income: 0 };
+        }
+        monthlyData[monthKey].expenses += Math.abs(expense.amount);
+      });
+
+      // Process income
+      incomeData.forEach(income => {
+        const date = new Date(income.date_time);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { expenses: 0, income: 0 };
+        }
+        monthlyData[monthKey].income += income.amount;
+      });
+
+      // Convert to array and sort by date
+      const processedData = Object.entries(monthlyData)
+        .map(([date, data]) => ({
+          date,
+          savingsRate: data.income > 0 ? ((data.income - data.expenses) / data.income * 100) : 0
+        }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      setSavingsRateData(processedData);
+    } catch (err) {
+      console.error("Error fetching savings rate data:", err);
+    }
+  };
+
+  const fetchIncomeVsExpensesData = async () => {
+    try {
+      const now = new Date();
+      const endDate = new Date();
+      const startDate = new Date(now.setMonth(now.getMonth() - 11)); // Last 12 months
+
+      const [expenseResponse, incomeResponse] = await Promise.all([
+        fetch(`http://127.0.0.1:8000/get-all-expense-transactions?start_date=${startDate.toISOString().split("T")[0]}&end_date=${endDate.toISOString().split("T")[0]}`),
+        fetch(`http://127.0.0.1:8000/get-all-income-transactions?start_date=${startDate.toISOString().split("T")[0]}&end_date=${endDate.toISOString().split("T")[0]}`)
+      ]);
+
+      if (!expenseResponse.ok || !incomeResponse.ok) 
+        throw new Error("Failed to fetch data for income vs expenses");
+
+      const expenseData = await expenseResponse.json();
+      const incomeData = await incomeResponse.json();
+
+      setIncomeVsExpensesData({ income: incomeData, expenses: expenseData });
+    } catch (err) {
+      console.error("Error fetching income vs expenses data:", err);
+    }
+  };
+
+  const fetchCibilScore = async () => {
+    try {
+      let response;
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const currentYear = today.getFullYear();
+
+      if (customRange === "last7" || customRange === "last30" || customRange === "last90" || customRange === "last365") {
+        // For current month, fetch the latest score
+        response = await fetch("http://127.0.0.1:8000/get-current-cibil-score");
+        if (!response.ok) throw new Error("Failed to fetch CIBIL score");
+        const data = await response.json();
+        setCibilScore(data);
+      } else if (customRange.includes("-")) {
+        // For specific month, fetch score for that month
+        const [year, month] = customRange.split("-");
+        
+        // If selected month is current month, use current CIBIL score
+        if (parseInt(year) === currentYear && parseInt(month) === currentMonth) {
+          response = await fetch("http://127.0.0.1:8000/get-current-cibil-score");
+          if (!response.ok) throw new Error("Failed to fetch CIBIL score");
+          const data = await response.json();
+          setCibilScore(data);
+        } else {
+          // For other months, fetch historical score
+          const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+          response = await fetch(`http://127.0.0.1:8000/get-cibil-score-by-month-and-year?month=${monthNames[parseInt(month) - 1]}&year=${year}`);
+          if (!response.ok) throw new Error("Failed to fetch CIBIL score");
+          const scores = await response.json();
+          // Get the latest score for that month (first in the array since we order by date desc)
+          if (scores && scores.length > 0) {
+            setCibilScore(scores[0]);
+          } else {
+            setCibilScore(null);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching CIBIL score:", err);
+      setCibilScore(null);
+    }
+  };
+
   const processCategories = (data) => {
     const categories = data.reduce((acc, expense) => {
-      acc[expense.category] =
-        (acc[expense.category] || 0) + Math.abs(expense.amount);
+      if (!acc[expense.category]) {
+        acc[expense.category] = {
+          total: 0,
+          topExpense: { amount: 0, notes: '', id: null }
+        };
+      }
+      acc[expense.category].total += Math.abs(expense.amount);
+      
+      // Update top expense if current expense is larger
+      if (Math.abs(expense.amount) > acc[expense.category].topExpense.amount) {
+        acc[expense.category].topExpense = {
+          amount: Math.abs(expense.amount),
+          notes: expense.notes || '',
+          id: expense.id
+        };
+      }
       return acc;
     }, {});
     setCategoryData(categories);
 
     // Process top categories
     const sortedCategories = Object.entries(categories)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 100);
+      .sort(([, a], [, b]) => b.total - a.total)
+      .slice(0, 9);
     setTopCategories(sortedCategories);
 
     // Process sub-categories
@@ -376,66 +557,100 @@ const Dashboard = () => {
 
     const sortedDates = Object.keys(groupedData).sort();
     const formattedDates = sortedDates.map((date) => {
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year.slice(2)}`;
+      const [, , day] = date.split("-");
+      return day; // Only return the day
     });
+
+    const values = sortedDates.map(date => groupedData[date]);
+    
+    // Function to get color based on amount with specific thresholds
+    const getColorForAmount = (amount) => {
+      if (amount <= 1000) {
+        return '#22c55e'; // Green for 0-1000
+      } else if (amount <= 5000) {
+        return '#fb923c'; // Lighter orange for 1000-5000
+      } else {
+        return '#ef4444'; // Red for >5000
+      }
+    };
+
+    // Create a single dataset with dynamic colors
+    const dataset = {
+      data: values,
+      borderColor: values.map(value => getColorForAmount(value)),
+      backgroundColor: values.map(value => {
+        const color = getColorForAmount(value);
+        return color.replace(')', ', 0.2)'); // Add opacity for fill
+      }),
+      fill: true,
+      tension: 0,
+      borderWidth: 3,
+      pointRadius: 5,
+      pointHoverRadius: 8,
+      pointBackgroundColor: values.map(value => getColorForAmount(value)),
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointStyle: 'circle',
+      pointHoverBackgroundColor: values.map(value => getColorForAmount(value)),
+      pointHoverBorderColor: '#fff',
+      pointHoverBorderWidth: 3,
+      borderDash: [],
+      borderJoinStyle: 'miter',
+      borderCapStyle: 'butt',
+      segment: {
+        borderColor: (ctx) => {
+          const value = ctx.p1.parsed.y;
+          return getColorForAmount(value);
+        },
+        backgroundColor: (ctx) => {
+          const value = ctx.p1.parsed.y;
+          const color = getColorForAmount(value);
+          return color.replace(')', ', 0.2)'); // Add opacity for fill
+        }
+      }
+    };
 
     return {
       labels: formattedDates,
-      datasets: [
-        {
-          label: "", // Removed 'Expenses' label
-          data: sortedDates.map((date) => groupedData[date]),
-          backgroundColor: "rgba(99, 102, 241, 0.1)",
-          borderColor: "rgba(99, 102, 241, 1)",
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-        },
-      ],
+      datasets: [dataset],
     };
   };
 
-  const colors = [
-    "rgba(99, 102, 241, 1)", // Indigo
-    "rgba(236, 72, 153, 1)", // Pink
-    "rgba(234, 179, 8, 1)", // Yellow
-    "rgba(34, 197, 94, 1)", // Green
-    "rgba(239, 68, 68, 1)", // Red
-    "rgba(161, 98, 247, 1)", // Purple
-    "rgba(14, 165, 233, 1)", // Sky
-    "rgba(249, 115, 22, 1)", // Orange
-  ];
+  const prepareWeeklyTrendData = () => {
+    const data = weeklyTrends.map((t, index) => ({
+      day: t.day,
+      amount: t.amount,
+      trend: index > 0 ? t.amount - weeklyTrends[index - 1].amount : 0
+    }));
 
-  const prepareCategoryData = () => ({
-    labels: Object.keys(categoryData),
-    datasets: [
-      {
-        data: Object.values(categoryData),
-        backgroundColor: colors.map((color) => color.replace("1)", "0.8)")),
-        borderWidth: 1,
-      },
-    ],
-  });
-
-  const prepareWeeklyTrendData = () => ({
-    labels: weeklyTrends.map((t) => t.day),
-    datasets: [
-      {
-        label: "Daily Average",
-        data: weeklyTrends.map((t) => t.amount),
-        // backgroundColor: 'rgba(34, 197, 94, 0.2)',
-        // borderColor: 'rgba(34, 197, 94, 1)',
-
-        backgroundColor: "rgba(6, 182, 212, 0.2)", // Cyan-400
-        borderColor: "rgba(6, 182, 212, 1)", // Cyan-600
-
-        borderWidth: 2,
-      },
-    ],
-  });
+    return {
+      labels: data.map(t => t.day),
+      datasets: [
+        {
+          label: "Daily Average",
+          data: data.map(t => t.amount),
+          borderColor: data.map(item => 
+            item.trend >= 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)'
+          ),
+          backgroundColor: 'rgba(231, 225, 231, 0.34)', // Light grey fill
+          borderWidth: 2,
+          tension: 0,
+          fill: true,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBackgroundColor: data.map(item => 
+            item.trend >= 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)'
+          ),
+          segment: {
+            borderColor: (ctx) => {
+              if (!ctx.p0.parsed || !ctx.p1.parsed) return 'rgba(34, 197, 94, 1)';
+              return ctx.p1.parsed.y >= ctx.p0.parsed.y ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)';
+            }
+          }
+        }
+      ]
+    };
+  };
 
   const prepareCategoryTrendData = () => {
     // Group expenses by date and category
@@ -454,25 +669,39 @@ const Dashboard = () => {
       ...new Set(expenses.map((e) => e.date_time.split("T")[0])),
     ].sort();
 
-    // Format dates for display (DD/MM/YY)
+    // Format dates for display (DD/MM)
     const formattedDates = dates.map((date) => {
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year.slice(2)}`;
+      const [, month, day] = date.split("-");
+      return `${day}/${month}`;
     });
+
+    // Calculate total amount for each category
+    const categoryTotals = Object.entries(groupedData).map(([category, dateValues]) => ({
+      category,
+      total: Object.values(dateValues).reduce((sum, val) => sum + val, 0)
+    }));
+
+    // Sort categories by total amount
+    categoryTotals.sort((a, b) => b.total - a.total);
 
     // Create datasets for each category
     const datasets = Object.entries(groupedData).map(
-      ([category, dateValues], index) => ({
-        label: category,
-        data: dates.map((date) => dateValues[date] || 0),
-        borderColor: colors[index % colors.length],
-        backgroundColor: colors[index % colors.length].replace("1)", "0.1)"),
-        borderWidth: 2,
-        tension: 0.4,
-        fill: false,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-      })
+      ([category, dateValues], index) => {
+        // Find the rank of this category
+        const categoryRank = categoryTotals.findIndex(c => c.category === category);
+        return {
+          label: category,
+          data: dates.map((date) => dateValues[date] || 0),
+          borderColor: colors[index % colors.length].color,
+          backgroundColor: colors[index % colors.length].color.replace("1)", "0.1)"),
+          borderWidth: 2,
+          tension: 0,
+          fill: false,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          hidden: categoryRank >= 3 // Hide all categories except top 3
+        };
+      }
     );
 
     return {
@@ -481,34 +710,67 @@ const Dashboard = () => {
     };
   };
 
-  const prepareTopSubCategoriesData = () => ({
-    labels: topSubCategories.map(([subCat]) => subCat),
-    datasets: [
-      {
+  const prepareTopSubCategoriesData = () => {
+    const data = topSubCategories.map(([subCat, amount]) => ({
+      subCat,
+      amount
+    }));
+
+    // Sort data by amount for color coding
+    const sortedData = [...data].sort((a, b) => b.amount - a.amount);
+    const maxAmount = sortedData[0]?.amount || 0;
+
+    // Function to get color based on amount percentage
+    const getColorForAmount = (amount) => {
+      const percentage = amount / maxAmount;
+      if (percentage <= 0.3) {
+        return {
+          bg: 'rgba(34, 197, 94, 0.2)',  // Green with opacity
+          border: 'rgba(34, 197, 94, 1)'  // Solid green
+        };
+      } else if (percentage <= 0.6) {
+        return {
+          bg: 'rgba(234, 179, 8, 0.2)',   // Yellow with opacity
+          border: 'rgba(234, 179, 8, 1)'  // Solid yellow
+        };
+      } else {
+        return {
+          bg: 'rgba(239, 68, 68, 0.2)',   // Red with opacity
+          border: 'rgba(239, 68, 68, 1)'  // Solid red
+        };
+      }
+    };
+
+    // Reverse the data array to mirror the y-axis
+    const reversedData = [...data].reverse();
+
+    return {
+      labels: reversedData.map(item => item.subCat),
+      datasets: [{
         label: "Amount",
-        data: topSubCategories.map(([, amount]) => amount),
-        // backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue fill
-        // borderColor: 'rgba(59, 130, 246, 1)', // Solid blue border
-        backgroundColor: "rgba(139, 92, 246, 0.2)", // Purple-400
-        borderColor: "rgba(139, 92, 246, 1)", // Purple-600
+        data: reversedData.map(item => item.amount),
+        backgroundColor: reversedData.map(item => getColorForAmount(item.amount).bg),
+        borderColor: reversedData.map(item => getColorForAmount(item.amount).border),
         borderWidth: 2,
-      },
-    ],
-  });
+        borderRadius: 4,
+        barThickness: 20,
+      }],
+    };
+  };
 
   const prepareSelectedCategorySubcatsData = () => ({
     labels: Object.keys(selectedCategorySubcats),
     datasets: [
       {
         data: Object.values(selectedCategorySubcats),
-        backgroundColor: colors.map((color) => color.replace("1)", "0.7)")),
+        backgroundColor: colors.map((color) => color.color.replace("1)", "0.7)")),
         borderWidth: 1,
       },
     ],
   });
 
   const prepareIncomeVsExpenseData = () => {
-    // Get the last 12 months
+    // Get the last 12 months starting from January 2025
     const months = [];
     const monthNames = [
       "Jan",
@@ -524,11 +786,12 @@ const Dashboard = () => {
       "Nov",
       "Dec",
     ];
-    const now = new Date();
-
+    
+    // Start from January 2025
+    const startDate = new Date(2025, 0, 1); // January 2025
     for (let i = 0; i < 12; i++) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      months.unshift({
+      const date = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+      months.push({
         year: date.getFullYear(),
         month: date.getMonth(),
         label: `${monthNames[date.getMonth()]} ${date.getFullYear()}`,
@@ -543,24 +806,18 @@ const Dashboard = () => {
     }, {});
 
     // Process expenses
-    expenses.forEach((expense) => {
+    incomeVsExpensesData.expenses.forEach((expense) => {
       const date = new Date(expense.date_time);
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}`;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
       if (groupedData[key]) {
         groupedData[key].expense += Math.abs(expense.amount);
       }
     });
 
     // Process income
-    incomeData.forEach((income) => {
+    incomeVsExpensesData.income.forEach((income) => {
       const date = new Date(income.date_time);
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}`;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
       if (groupedData[key]) {
         groupedData[key].income += income.amount;
       }
@@ -578,7 +835,7 @@ const Dashboard = () => {
           backgroundColor: "rgba(34, 197, 94, 0.2)",
           borderColor: "rgba(34, 197, 94, 1)",
           borderWidth: 2,
-          tension: 0.4,
+          tension: 0,
           pointRadius: 4,
           pointHoverRadius: 6,
           pointBackgroundColor: "rgba(34, 197, 94, 1)",
@@ -594,78 +851,12 @@ const Dashboard = () => {
           backgroundColor: "rgba(239, 68, 68, 0.2)",
           borderColor: "rgba(239, 68, 68, 1)",
           borderWidth: 2,
-          tension: 0.4,
+          tension: 0,
           pointRadius: 4,
           pointHoverRadius: 6,
           pointBackgroundColor: "rgba(239, 68, 68, 1)",
           pointBorderColor: "#fff",
           pointBorderWidth: 2,
-        },
-      ],
-    };
-  };
-
-  const prepareCategoryBudgetsData = () => {
-    // Define the allowed categories from the dropdown
-    const allowedCategories = [
-      "Food & Dining",
-      "Transportation",
-      "Shopping",
-      "Housing",
-      "Personal Care",
-      "Entertainment",
-      "Healthcare",
-      "Education",
-      "Miscellaneous",
-      "Debt",
-      "Taxes & Insurance",
-      "Others",
-    ];
-
-    // Filter categories to only include allowed ones
-    const filteredCategories = Object.keys(categoryData).filter((category) =>
-      allowedCategories.includes(category)
-    );
-
-    const budgets = filteredCategories.map(
-      (category) => categoryBudgets[category] || 0
-    );
-    const spent = filteredCategories.map(
-      (category) => categoryData[category] || 0
-    );
-
-    // Calculate percentages for tooltip
-    const percentages = filteredCategories.map((category, index) => {
-      const budget = budgets[index];
-      const spentAmount = spent[index];
-      return budget > 0 ? ((spentAmount / budget) * 100).toFixed(1) : 0;
-    });
-
-    return {
-      labels: filteredCategories,
-      datasets: [
-        {
-          label: "Budget",
-          data: budgets,
-          // backgroundColor: 'rgba(34, 197, 94, 0.2)', // Light green
-          // borderColor: 'rgba(34, 197, 94, 1)', // Green
-          backgroundColor: "rgba(59, 130, 246, 0.2)", // Blue-200
-          borderColor: "rgba(59, 130, 246, 1)", // Blue-500
-          borderWidth: 2,
-          barPercentage: 0.7,
-          categoryPercentage: 0.9,
-        },
-        {
-          label: "Spent",
-          data: spent,
-          // backgroundColor: 'rgba(239, 68, 68, 0.2)', // Light red
-          // borderColor: 'rgba(239, 68, 68, 1)', // Red
-
-          backgroundColor: "rgba(251, 146, 60, 0.2)", // Orange-200
-          borderColor: "rgba(251, 146, 60, 1)", // Orange-500
-          borderWidth: 2,
-          barPercentage: 0.7,
-          categoryPercentage: 0.9,
         },
       ],
     };
@@ -695,25 +886,113 @@ const Dashboard = () => {
       return `${monthName} ${year}`;
     });
 
+    // Calculate trends for coloring
+    const values = sortedDates.map(date => groupedData[date]);
+    const trends = values.map((value, index) => {
+      if (index === 0) return 0;
+      return value - values[index - 1];
+    });
+
     return {
       labels: formattedDates,
       datasets: [
         {
           label: "Credit Card Expenses",
-          data: sortedDates.map((date) => groupedData[date]),
-          // backgroundColor: 'rgba(99, 102, 241, 0.1)',
-          // borderColor: 'rgba(99, 102, 241, 1)',
-          backgroundColor: "rgba(248, 113, 113, 0.1)",
-          borderColor: "rgba(220, 38, 38, 1)",
-          // deep yellow border
-
+          data: values,
+          borderColor: trends.map(trend => 
+            trend >= 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)'
+          ),
+          backgroundColor: 'rgba(231, 225, 231, 0.34)', // Light grey fill
           borderWidth: 2,
           fill: true,
-          tension: 0.4,
+          tension: 0,
           pointRadius: 4,
           pointHoverRadius: 6,
+          pointBackgroundColor: trends.map(trend => 
+            trend >= 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)'
+          ),
+          segment: {
+            borderColor: (ctx) => {
+              if (!ctx.p0.parsed || !ctx.p1.parsed) return 'rgba(34, 197, 94, 1)';
+              return ctx.p1.parsed.y >= ctx.p0.parsed.y ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 197, 94, 1)';
+            }
+          }
         },
       ],
+    };
+  };
+
+  const prepareSavingsRateData = () => {
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    // Process the data with additional information
+    const processedData = savingsRateData.map((item, index) => {
+      const prevValue = index > 0 ? savingsRateData[index - 1].savingsRate : item.savingsRate;
+      const monthDate = new Date(item.date);
+      
+      // Calculate monthly income using savingsRateIncome
+      const monthIncome = savingsRateIncome.reduce((sum, income) => {
+        const incomeDate = new Date(income.date_time);
+        if (incomeDate.getMonth() === monthDate.getMonth() && 
+            incomeDate.getFullYear() === monthDate.getFullYear()) {
+          return sum + income.amount;
+        }
+        return sum;
+      }, 0);
+
+      // Calculate monthly expenses using savingsRateExpenses
+      const monthExpenses = savingsRateExpenses.reduce((sum, expense) => {
+        const expenseDate = new Date(expense.date_time);
+        if (expenseDate.getMonth() === monthDate.getMonth() && 
+            expenseDate.getFullYear() === monthDate.getFullYear()) {
+          return sum + Math.abs(expense.amount);
+        }
+        return sum;
+      }, 0);
+
+      return {
+        ...item,
+        trend: item.savingsRate - prevValue,
+        monthIncome,
+        monthExpenses
+      };
+    });
+
+    return {
+      labels: processedData.map(item => {
+        const [year, month] = item.date.split("-");
+        return `${monthNames[parseInt(month) - 1]} ${year}`;
+      }),
+      datasets: [
+        {
+          label: 'Savings Rate',
+          data: processedData.map(item => item.savingsRate),
+          borderColor: processedData.map(item => 
+            item.trend >= 0 ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)'
+          ),
+          backgroundColor: processedData.map(item => 
+            item.trend >= 0 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+          ),
+          borderWidth: 2,
+          tension: 0,
+          fill: false,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBackgroundColor: processedData.map(item => 
+            item.trend >= 0 ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)'
+          ),
+          segment: {
+            borderColor: (ctx) => {
+              if (!ctx.p0.parsed || !ctx.p1.parsed) return 'rgba(34, 197, 94, 1)';
+              return ctx.p1.parsed.y >= ctx.p0.parsed.y ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)';
+            }
+          },
+          monthlyData: processedData
+        }
+      ]
     };
   };
 
@@ -722,100 +1001,133 @@ const Dashboard = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Hide legend since we don't have a label
+        display: false,
       },
       title: {
-        display: false, // Remove title
+        display: false,
       },
       tooltip: {
-        mode: "index",
-        intersect: false,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        mode: "nearest",
+        intersect: true,
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
         titleColor: "#1f2937",
         bodyColor: "#1f2937",
         borderColor: "#e5e7eb",
         borderWidth: 1,
         padding: 12,
+        cornerRadius: 8,
         bodyFont: {
           size: 14,
           family: "'Inter', sans-serif",
+          weight: '500',
+        },
+        titleFont: {
+          size: 14,
+          family: "'Inter', sans-serif",
+          weight: '600',
         },
         callbacks: {
+          title: (context) => {
+            const date = new Date(expenses[context[0].dataIndex].date_time);
+            return date.toLocaleDateString('en-US', { 
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          },
           label: (context) => `₹${context.parsed.y.toLocaleString()}`,
+        },
+        filter: (tooltipItem) => {
+          return tooltipItem.parsed.y !== null;
         },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
+        reverse: true,
         grid: {
           color: "rgba(0, 0, 0, 0.05)",
           drawBorder: false,
+          lineWidth: 1,
         },
         ticks: {
           font: {
             family: "'Inter', sans-serif",
+            size: 12,
+            weight: '500',
           },
+          padding: 10,
           callback: (value) => `₹${value.toLocaleString()}`,
+          color: (context) => {
+            const value = context.tick.value;
+            const maxValue = context.chart.scales.y.max;
+            const percentage = value / maxValue;
+            
+            if (percentage <= 0.3) {
+              return '#22c55e'; // Green
+            } else if (percentage <= 0.6) {
+              return '#eab308'; // Yellow
+            } else {
+              return '#ef4444'; // Red
+            }
+          },
+        },
+        border: {
+          display: false,
         },
       },
       x: {
+        position: 'top',
         grid: {
-          display: false,
+          display: true,
+          color: "rgba(0, 0, 0, 0.05)",
         },
         ticks: {
           font: {
             family: "'Inter', sans-serif",
+            size: 14,
+            weight: '700',
           },
-          maxRotation: 45,
-          minRotation: 45,
+          padding: 10,
+          maxRotation: 0,
+          minRotation: 0,
+          color: (context) => {
+            const value = context.chart.data.datasets[0].data[context.index];
+            const maxValue = Math.max(...context.chart.data.datasets[0].data);
+            const percentage = value / maxValue;
+            
+            if (percentage <= 0.3) {
+              return '#22c55e'; // Green
+            } else if (percentage <= 0.6) {
+              return '#eab308'; // Yellow
+            } else {
+              return '#ef4444'; // Red
+            }
+          },
+        },
+        border: {
+          display: false,
         },
       },
     },
     interaction: {
-      intersect: false,
-      mode: "index",
+      mode: "nearest",
+      intersect: true,
+      axis: "x",
     },
     animation: {
       duration: 1000,
       easing: "easeInOutQuart",
     },
-  };
-
-  const doughnutOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          font: {
-            size: 12,
-            family: "'Inter', sans-serif",
-          },
-          padding: 20,
-        },
+    elements: {
+      line: {
+        tension: 0,
       },
-      tooltip: {
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
-        titleColor: "#1f2937",
-        bodyColor: "#1f2937",
-        borderColor: "#e5e7eb",
-        borderWidth: 1,
-        padding: 12,
-        callbacks: {
-          label: (context) =>
-            `₹${context.raw.toLocaleString()} (${(
-              (context.raw / summary.total) *
-              100
-            ).toFixed(1)}%)`,
-        },
+      point: {
+        radius: 5,
+        hoverRadius: 8,
       },
-    },
-    cutout: "60%",
-    animation: {
-      animateScale: true,
-      animateRotate: true,
     },
   };
 
@@ -948,6 +1260,135 @@ const Dashboard = () => {
     return "Custom Range";
   };
 
+  // Utility: Calculate week-wise totals for the current month/range
+  const getWeekWiseTotals = () => {
+    if (!expenses.length) return [];
+    // Get the current month and year from the selected range
+    let month, year;
+    if (customRange.includes("-")) {
+      [year, month] = customRange.split("-").map(Number);
+    } else {
+      const d = new Date();
+      year = d.getFullYear();
+      month = d.getMonth() + 1;
+    }
+
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+    const currentDay = today.getDate();
+    const isCurrentMonth = month === currentMonth && year === currentYear;
+
+    // Filter expenses for the selected month/year
+    const filtered = expenses.filter((exp) => {
+      const d = new Date(exp.date_time);
+      return d.getFullYear() === Number(year) && d.getMonth() + 1 === Number(month);
+    });
+
+    // Group by week number
+    const weekTotals = {};
+    filtered.forEach((exp) => {
+      const d = new Date(exp.date_time);
+      const day = d.getDate();
+      let weekNum = Math.ceil(day / 7); // 1-based week number
+      // For months with >28 days, group 29-31 as week 5
+      if (weekNum > 4) weekNum = 5;
+      weekTotals[weekNum] = (weekTotals[weekNum] || 0) + Math.abs(exp.amount);
+    });
+
+    // Get the number of weeks in the selected month
+    const lastDayOfMonth = new Date(year, month, 0).getDate();
+    const totalWeeks = Math.ceil(lastDayOfMonth / 7);
+
+    // Prepare array for rendering
+    return Array.from({ length: totalWeeks }, (_, i) => {
+      const weekNumber = i + 1;
+      if (isCurrentMonth) {
+        const weekStartDay = (weekNumber - 1) * 7 + 1;
+        if (weekStartDay > currentDay) {
+          // Future week in current month
+          return { week: weekNumber, amount: "NA" };
+        }
+      }
+      return weekTotals[weekNumber] !== undefined 
+        ? { week: weekNumber, amount: weekTotals[weekNumber] } 
+        : { week: weekNumber, amount: 0 };
+    });
+  };
+
+  const handleScoreAdded = (newScore) => {
+    // Remove this function as it's no longer needed
+  };
+
+  const handleExpenseClick = async (expenseId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/get-expense-transaction-by-id/${expenseId}`);
+      if (!response.ok) throw new Error("Failed to fetch expense details");
+      const data = await response.json();
+      setSelectedExpense(data);
+      setShowExpenseModal(true);
+    } catch (err) {
+      console.error("Error fetching expense details:", err);
+    }
+  };
+
+  const closeExpenseModal = () => {
+    setShowExpenseModal(false);
+    setSelectedExpense(null);
+  };
+
+  const getAmountColor = (amount) => {
+    if (amount >= 10000) return '#ef4444'; // Red for high amounts
+    if (amount >= 5000) return '#f97316';  // Orange for medium amounts
+    return '#22c55e';                      // Green for low amounts
+  };
+
+  const handleCategoryClick = (category) => {
+    const categoryTransactions = expenses.filter(exp => exp.category === category);
+    setSelectedCategoryTransactions(categoryTransactions);
+    setShowCategoryTransactionsModal(true);
+  };
+
+  const handleTransactionClick = (transaction) => {
+    setIsSlidingOut(true);
+    setTimeout(() => {
+      setSelectedTransaction(transaction);
+    }, 300);
+  };
+
+  const handleCloseTransactionPanel = () => {
+    setSelectedTransaction(null);
+    setIsSlidingOut(false);
+  };
+
+  const handleWeekClick = (week, amount) => {
+    if (amount === "NA") return;
+    
+    const now = new Date();
+    let startDate, endDate;
+    
+    if (customRange.includes("-")) {
+      const [year, month] = customRange.split("-").map(Number);
+      const weekStartDay = (week - 1) * 7 + 1;
+      startDate = new Date(year, month - 1, weekStartDay);
+      endDate = new Date(year, month - 1, Math.min(weekStartDay + 6, new Date(year, month, 0).getDate()));
+    } else {
+      const today = new Date();
+      const weekStartDay = today.getDate() - today.getDay() + (week - 1) * 7;
+      startDate = new Date(today.getFullYear(), today.getMonth(), weekStartDay);
+      endDate = new Date(today.getFullYear(), today.getMonth(), weekStartDay + 6);
+    }
+
+    const weekTransactions = expenses.filter(expense => {
+      const expenseDate = new Date(expense.date_time);
+      return expenseDate >= startDate && expenseDate <= endDate;
+    });
+
+    setSelectedWeekTransactions(weekTransactions);
+    setShowWeekTransactionsModal(true);
+  };
+
+  // Add this function to handle week clicks
   if (loading)
     return (
       <div className="loading-container">
@@ -991,56 +1432,131 @@ const Dashboard = () => {
               ))}
             </optgroup>
           </select>
-          <select
+          {/* <select
             value={chartType}
             onChange={(e) => setChartType(e.target.value)}
             className="chart-type-select"
           >
             <option value="line">Line Graph</option>
             <option value="bar">Bar Graph</option>
-          </select>
+          </select> */}
         </div>
       </div>
 
       <div className="summary-cards">
         <div className="summary-card total">
-          <div className="card-icon">
+          {/* <div className="card-icon">
             <FaWallet />
-          </div>
+          </div> */}
           <div className="card-content">
             <h3>Total Expenses</h3>
-            <p className="amount">₹{summary.total.toLocaleString()}</p>
-            <p className="label">{getTimeRangeLabel()}</p>
+            <div className="total-expenses-row">
+              <p className="amount" style={{ color: summary.total > (Object.values(categoryBudgets).reduce((sum, budget) => sum + budget, 0) || Infinity) ? "#ef4444" : "#22c55e" }}>
+                ₹{summary.total.toLocaleString()}
+              </p>
+              <p className="label">{getTimeRangeLabel()}</p>
+              <div className="week-breakdown" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '8px',
+                marginTop: '12px',
+                padding: '8px',
+                borderTop: '1px solid #e5e7eb'
+              }}>
+                {getWeekWiseTotals().map(({ week, amount }) => {
+                  const weeklyAverage = summary.total / getWeekWiseTotals().filter(w => w.amount !== "NA").length;
+                  const isHighSpending = amount !== "NA" && amount > weeklyAverage * 1.2; // 20% above average
+                  return (
+                    <div 
+                      key={week} 
+                      className="week-row"
+                      onClick={() => handleWeekClick(week, amount)}
+                      style={{ 
+                        cursor: amount !== "NA" ? 'pointer' : 'default',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '8px 12px',
+                        backgroundColor: amount !== "NA" ? (isHighSpending ? 'rgba(239, 68, 68, 0.05)' : 'rgba(34, 197, 94, 0.05)') : 'transparent',
+                        borderRadius: '6px',
+                        transition: 'all 0.2s ease',
+                        ':hover': {
+                          backgroundColor: amount !== "NA" ? (isHighSpending ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)') : 'transparent'
+                        }
+                      }}
+                    >
+                      <span className="week-label" style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.9em',
+                        color: '#4b5563',
+                        fontWeight: '500',
+                        minWidth: '80px'
+                      }}>
+                        <FaCalendarAlt style={{
+                          fontSize: '0.9em',
+                          color: '#6b7280'
+                        }} />
+                        <span>Week {week}</span>
+                      </span>
+                      <span className="week-amount" style={{ 
+                        color: amount === "NA" ? '#6b7280' : (isHighSpending ? '#ef4444' : '#22c55e'),
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.9em',
+                        fontWeight: '600',
+                        minWidth: '80px',
+                        justifyContent: 'flex-end'
+                      }}>
+                        {amount === "NA" ? "NA" : (
+                          <>
+                            {isHighSpending && <FaArrowUp style={{ color: '#ef4444' }} />}
+                            ₹{amount.toLocaleString()}
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div style={{ 
+              display: 'flex',
+              alignItems: 'center',
+              gap: '24px',
+              marginTop: '12px',
+              padding: '8px',
+              borderTop: '1px solid #e5e7eb',
+              minHeight: '48px'
+            }}>
+              <div style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flex: 1
+              }}>
+                <FaTags style={{ color: '#3b82f6' }} />
+                <span style={{ color: '#4b5563', fontSize: '0.9em' }}>Top Category: {summary.topCategory.name} (₹{summary.topCategory.amount.toLocaleString()})</span>
+              </div>
+              <div style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flex: 1
+              }}>
+                <FaChartBar style={{ color: '#8b5cf6' }} />
+                <span style={{ color: '#4b5563', fontSize: '0.9em' }}>Highest Transaction: ₹{summary.topSingleTransaction.amount.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="summary-card top-category">
-          <div className="card-icon">
-            <FaTags />
-          </div>
-          <div className="card-content">
-            <h3>Top Spending Category</h3>
-            <p className="amount">
-              ₹{summary.topCategory.amount.toLocaleString()}
-            </p>
-            <p className="label">{summary.topCategory.name}</p>
-          </div>
-        </div>
-        <div className="highest summary-card">
-          <div className="card-icon">
-            <FaArrowUp />
-          </div>
-          <div className="card-content">
-            <h3>Highest Expense</h3>
-            <p className="amount">₹{summary.highest.toLocaleString()}</p>
-            <p className="label">
-              {summary.topSingleTransaction.subCategory} (Single Transaction)
-            </p>
-          </div>
-        </div>
-        <div className="balance summary-card">
-          <div className="card-icon">
+
+        <div className="summary-card balance">
+          {/* <div className="card-icon">
             <FaWallet />
-          </div>
+          </div> */}
           <div className="card-content">
             <h3>Current Balance</h3>
             <p
@@ -1056,20 +1572,376 @@ const Dashboard = () => {
             </p>
             <div className="bank-balances-tooltip">
               {Object.entries(bankBalances).map(([bank, bal]) => (
-                <div key={bank} className="bank-balance-item">
-                  <div className="bank-info">
-                    <FaUniversity className="bank-icon" />
-                    <span className="bank-name">{bank}</span>
+                <div key={bank} className="bank-balance-item" style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '8px 12px',
+                  borderBottom: '1px solid #e5e7eb',
+                  gap: '16px'
+                }}>
+                  <div className="bank-info" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    minWidth: '120px'
+                  }}>
+                    <FaUniversity className="bank-icon" style={{ color: '#3b82f6' }} />
+                    <span className="bank-name" style={{
+                      fontSize: '0.9em',
+                      color: '#4b5563',
+                      fontWeight: '500',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>{bank}</span>
                   </div>
                   <span
                     className={`bank-amount ${
                       bal < 0 ? "bank-amount--red" : "bank-amount--green"
                     }`}
+                    style={{
+                      fontSize: '0.9em',
+                      fontWeight: '600',
+                      color: bal < 0 ? '#ef4444' : '#22c55e',
+                      minWidth: '100px',
+                      textAlign: 'right'
+                    }}
                   >
                     ₹{bal.toLocaleString()}
                   </span>
                 </div>
               ))}
+            </div>
+            <div style={{ 
+              display: 'flex',
+              alignItems: 'center',
+              gap: '24px',
+              marginTop: '20px',  // Changed from 12px to 15px
+              padding: '8px',
+              borderTop: '1px solid #e5e7eb',
+              minHeight: '48px'
+            }}>
+              <div style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flex: 1
+              }}>
+                <FaWallet style={{ color: '#3b82f6' }} />
+                <span style={{ color: '#4b5563', fontSize: '0.9em' }}>
+                  Amount in Hand: ₹{(Object.entries(bankBalances)
+                    .filter(([bank]) => bank !== 'Lent Balance')
+                    .reduce((sum, [, bal]) => sum + bal, 0)).toLocaleString()}
+                </span>
+              </div>
+              <div style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flex: 1
+              }}>
+                <FaArrowUp style={{ color: '#8b5cf6' }} />
+                <span style={{ color: '#4b5563', fontSize: '0.9em' }}>
+                  Amount Lent: ₹{(bankBalances['Lent Balance'] || 0).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="summary-card financial-health">
+          <div className="card-content">
+            <h3>Financial Health</h3>
+            <div className="health-score-container">
+              <div className="health-indicators">
+                <div className="indicator-row">
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Savings Rate</div>
+                      <div className="indicator-icon">
+                        <FaChartLine />
+                      </div>
+                    </div>
+                    <div className={`indicator-value ${(() => {
+                      const savingsRate = parseFloat((() => {
+                        const now = new Date();
+                        let startDate, endDate = new Date();
+
+                        if (customRange === "last7") {
+                          startDate = new Date(now.setDate(now.getDate() - 7));
+                        } else if (customRange === "last30") {
+                          startDate = new Date(now.setDate(now.getDate() - 30));
+                        } else if (customRange === "last90") {
+                          startDate = new Date(now.setDate(now.getDate() - 90));
+                        } else if (customRange === "last365") {
+                          startDate = new Date(now.setDate(now.getDate() - 365));
+                        } else if (customRange.includes("-")) {
+                          const [year, month] = customRange.split("-").map(Number);
+                          startDate = new Date(year, month - 1, 1);
+                          endDate = new Date(year, month, 0);
+                        }
+
+                        const filteredIncome = savingsRateIncome.filter(income => {
+                          const incomeDate = new Date(income.date_time);
+                          return incomeDate >= startDate && incomeDate <= endDate;
+                        });
+
+                        const filteredExpenses = savingsRateExpenses.filter(expense => {
+                          const expenseDate = new Date(expense.date_time);
+                          return expenseDate >= startDate && expenseDate <= endDate;
+                        });
+
+                        const totalIncome = filteredIncome.reduce((sum, income) => sum + income.amount, 0);
+                        const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + Math.abs(expense.amount), 0);
+                        return totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+                      })()).toFixed(1);
+                      
+                      if (savingsRate >= 20) return 'positive';
+                      if (savingsRate >= 10) return 'neutral';
+                      return 'negative';
+                    })()}`}>
+                      {(() => {
+                        const now = new Date();
+                        let startDate, endDate = new Date();
+
+                        if (customRange === "last7") {
+                          startDate = new Date(now.setDate(now.getDate() - 7));
+                        } else if (customRange === "last30") {
+                          startDate = new Date(now.setDate(now.getDate() - 30));
+                        } else if (customRange === "last90") {
+                          startDate = new Date(now.setDate(now.getDate() - 90));
+                        } else if (customRange === "last365") {
+                          startDate = new Date(now.setDate(now.getDate() - 365));
+                        } else if (customRange.includes("-")) {
+                          const [year, month] = customRange.split("-").map(Number);
+                          startDate = new Date(year, month - 1, 1);
+                          endDate = new Date(year, month, 0);
+                        }
+
+                        const filteredIncome = savingsRateIncome.filter(income => {
+                          const incomeDate = new Date(income.date_time);
+                          return incomeDate >= startDate && incomeDate <= endDate;
+                        });
+
+                        const filteredExpenses = savingsRateExpenses.filter(expense => {
+                          const expenseDate = new Date(expense.date_time);
+                          return expenseDate >= startDate && expenseDate <= endDate;
+                        });
+
+                        const totalIncome = filteredIncome.reduce((sum, income) => sum + income.amount, 0);
+                        const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + Math.abs(expense.amount), 0);
+                        const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+                        return savingsRate.toFixed(1);
+                      })()}%
+                    </div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill"
+                          style={{
+                            width: `${Math.min(parseFloat((() => {
+                              const now = new Date();
+                              let startDate, endDate = new Date();
+
+                              if (customRange === "last7") {
+                                startDate = new Date(now.setDate(now.getDate() - 7));
+                              } else if (customRange === "last30") {
+                                startDate = new Date(now.setDate(now.getDate() - 30));
+                              } else if (customRange === "last90") {
+                                startDate = new Date(now.setDate(now.getDate() - 90));
+                              } else if (customRange === "last365") {
+                                startDate = new Date(now.setDate(now.getDate() - 365));
+                              } else if (customRange.includes("-")) {
+                                const [year, month] = customRange.split("-").map(Number);
+                                startDate = new Date(year, month - 1, 1);
+                                endDate = new Date(year, month, 0);
+                              }
+
+                              const filteredIncome = savingsRateIncome.filter(income => {
+                                const incomeDate = new Date(income.date_time);
+                                return incomeDate >= startDate && incomeDate <= endDate;
+                              });
+
+                              const filteredExpenses = savingsRateExpenses.filter(expense => {
+                                const expenseDate = new Date(expense.date_time);
+                                return expenseDate >= startDate && expenseDate <= endDate;
+                              });
+
+                              const totalIncome = filteredIncome.reduce((sum, income) => sum + income.amount, 0);
+                              const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + Math.abs(expense.amount), 0);
+                              return totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+                            })()), 100)}%`,
+                            backgroundColor: (() => {
+                              const savingsRate = parseFloat((() => {
+                                const now = new Date();
+                                let startDate, endDate = new Date();
+
+                                if (customRange === "last7") {
+                                  startDate = new Date(now.setDate(now.getDate() - 7));
+                                } else if (customRange === "last30") {
+                                  startDate = new Date(now.setDate(now.getDate() - 30));
+                                } else if (customRange === "last90") {
+                                  startDate = new Date(now.setDate(now.getDate() - 90));
+                                } else if (customRange === "last365") {
+                                  startDate = new Date(now.setDate(now.getDate() - 365));
+                                } else if (customRange.includes("-")) {
+                                  const [year, month] = customRange.split("-").map(Number);
+                                  startDate = new Date(year, month - 1, 1);
+                                  endDate = new Date(year, month, 0);
+                                }
+
+                                const filteredIncome = savingsRateIncome.filter(income => {
+                                  const incomeDate = new Date(income.date_time);
+                                  return incomeDate >= startDate && incomeDate <= endDate;
+                                });
+
+                                const filteredExpenses = savingsRateExpenses.filter(expense => {
+                                  const expenseDate = new Date(expense.date_time);
+                                  return expenseDate >= startDate && expenseDate <= endDate;
+                                });
+
+                                const totalIncome = filteredIncome.reduce((sum, income) => sum + income.amount, 0);
+                                const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + Math.abs(expense.amount), 0);
+                                return totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+                              })()).toFixed(1);
+                              
+                              if (savingsRate >= 20) return '#22c55e';
+                              if (savingsRate >= 10) return '#eab308';
+                              return '#ef4444';
+                            })()
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Budget Score</div>
+                      <div className="indicator-icon">
+                        <FaWallet />
+                      </div>
+                    </div>
+                    <div className={`indicator-value ${(() => {
+                      const totalBudget = Object.values(categoryBudgets).reduce((sum, budget) => sum + budget, 0);
+                      const totalSpending = summary.total;
+                      const budgetScore = (100 - (100 * (totalSpending / (totalBudget || 1))));
+                      
+                      if (budgetScore >= 50) return 'positive';
+                      if (budgetScore >= 25) return 'neutral';
+                      return 'negative';
+                    })()}`}>
+                      {(() => {
+                        const totalBudget = Object.values(categoryBudgets).reduce((sum, budget) => sum + budget, 0);
+                        const totalSpending = summary.total;
+                        return (100 - (100 * (totalSpending / (totalBudget || 1)))).toFixed(1);
+                      })()}%
+                    </div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill"
+                          style={{
+                            width: `${Math.min(parseFloat((() => {
+                              const totalBudget = Object.values(categoryBudgets).reduce((sum, budget) => sum + budget, 0);
+                              const totalSpending = summary.total;
+                              return (100 - (100 * (totalSpending / (totalBudget || 1))));
+                            })()), 100)}%`,
+                            backgroundColor: (() => {
+                              const totalBudget = Object.values(categoryBudgets).reduce((sum, budget) => sum + budget, 0);
+                              const totalSpending = summary.total;
+                              const budgetScore = (100 - (100 * (totalSpending / (totalBudget || 1))));
+                              
+                              if (budgetScore >= 50) return '#22c55e';
+                              if (budgetScore >= 25) return '#eab308';
+                              return '#ef4444';
+                            })()
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Credit Score</div>
+                      <div className="indicator-icon">
+                        <FaChartBar />
+                      </div>
+                    </div>
+                    <div className={`indicator-value ${(() => {
+                      if (!cibilScore) return 'na';
+                      if (cibilScore.score >= 750) return 'positive';
+                      if (cibilScore.score >= 650) return 'neutral';
+                      return 'negative';
+                    })()}`}>
+                      {cibilScore ? cibilScore.score : 'NA'}
+                    </div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill"
+                          style={{
+                            width: cibilScore ? `${Math.min((cibilScore.score / 900) * 100, 100)}%` : '0%',
+                            backgroundColor: cibilScore ? (
+                              cibilScore.score >= 750 ? '#22c55e' :
+                              cibilScore.score >= 650 ? '#eab308' : '#ef4444'
+                            ) : '#6b7280'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="indicator-row">
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Emergency Fund</div>
+                      <div className="indicator-icon">
+                        <FaMoneyBillWave />
+                      </div>
+                    </div>
+                    <div className="indicator-value na">NA</div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: '0%', backgroundColor: '#6b7280' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Debt-to-Income</div>
+                      <div className="indicator-icon">
+                        <FaLayerGroup />
+                      </div>
+                    </div>
+                    <div className="indicator-value na">NA</div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: '0%', backgroundColor: '#6b7280' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="indicator">
+                    <div className="indicator-header">
+                      <div className="indicator-label">Investment Rate</div>
+                      <div className="indicator-icon">
+                        <FaChartLine />
+                      </div>
+                    </div>
+                    <div className="indicator-value na">NA</div>
+                    <div className="indicator-progress">
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: '0%', backgroundColor: '#6b7280' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1123,8 +1995,126 @@ const Dashboard = () => {
                       family: "'Inter', sans-serif",
                     },
                     callbacks: {
-                      label: (context) =>
-                        `₹${context.parsed.y.toLocaleString()}`,
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        const trend = context.dataset.data[context.dataIndex] - (context.dataIndex > 0 ? context.dataset.data[context.dataIndex - 1] : 0);
+                        const trendSymbol = trend >= 0 ? '▲' : '▼';
+                        return [
+                          `Amount: ₹${value.toLocaleString()}`,
+                          `Trend: ${trendSymbol} ₹${Math.abs(trend).toLocaleString()}`
+                        ];
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    reverse: true,
+                    grid: {
+                      color: "rgba(0, 0, 0, 0.05)",
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
+                      },
+                      padding: 10,
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.y.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#22c55e'; // Green
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow
+                        } else {
+                          return '#ef4444'; // Red
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
+                    },
+                  },
+                  x: {
+                    position: 'top',
+                    grid: {
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 14,
+                        weight: '700',
+                      },
+                      padding: 10,
+                      maxRotation: 0,
+                      minRotation: 0,
+                      color: (context) => {
+                        const value = context.chart.data.datasets[0].data[context.index];
+                        const maxValue = Math.max(...context.chart.data.datasets[0].data);
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#22c55e'; // Green
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow
+                        } else {
+                          return '#ef4444'; // Red
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="savings-rate-chart">
+          <h2>
+            <FaChartLine /> Monthly Savings Rate
+          </h2>
+          <div className="chart-container">
+            <Line
+              data={prepareSavingsRateData()}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    titleColor: "#1f2937",
+                    bodyColor: "#1f2937",
+                    borderColor: "#e5e7eb",
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                      label: (context) => {
+                        const datasetIndex = context.datasetIndex;
+                        const dataIndex = context.dataIndex;
+                        const monthlyData = context.dataset.monthlyData[dataIndex];
+                        
+                        const trendSymbol = monthlyData.trend >= 0 ? '▲' : '▼';
+                        return [
+                          `Savings Rate: ${monthlyData.savingsRate.toFixed(1)}%`,
+                          `Net Income: ₹${monthlyData.monthIncome.toLocaleString()}`,
+                          `Net Expenses: ₹${monthlyData.monthExpenses.toLocaleString()}`,
+                          `Trend: ${trendSymbol} ${Math.abs(monthlyData.trend).toFixed(1)}%`
+                        ];
+                      },
                     },
                   },
                 },
@@ -1138,20 +2128,60 @@ const Dashboard = () => {
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
                       },
-                      callback: (value) => `₹${value.toLocaleString()}`,
+                      padding: 10,
+                      callback: (value) => `${value.toFixed(1)}%`,
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.y.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#ef4444'; // Red for low savings rate
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow for medium savings rate
+                        } else {
+                          return '#22c55e'; // Green for high savings rate
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
                     },
                   },
                   x: {
+                    position: 'bottom',
                     grid: {
-                      display: false,
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
                     },
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 14,
+                        weight: '700',
                       },
-                      maxRotation: 45,
-                      minRotation: 45,
+                      padding: 10,
+                      maxRotation: 0,
+                      minRotation: 0,
+                      color: (context) => {
+                        const value = context.chart.data.datasets[0].data[context.index];
+                        const maxValue = Math.max(...context.chart.data.datasets[0].data);
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#ef4444'; // Red for low savings rate
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow for medium savings rate
+                        } else {
+                          return '#22c55e'; // Green for high savings rate
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
                     },
                   },
                 },
@@ -1160,12 +2190,277 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="category-chart">
+        <div className="top-categories">
           <h2>
-            <FaChartPie /> Category Distribution
+            <FaChartLine /> Top Spending Categories
+          </h2>
+          <div className="top-categories-list">
+            {topCategories.map(([category, data], index) => {
+              const budget = categoryBudgets[category] || 0;
+              const percentage = budget > 0 ? ((data.total / budget) * 100).toFixed(1) : 0;
+              const isOverBudget = budget > 0 && data.total > budget;
+              const categoryColor = colors[index % colors.length];
+
+              return (
+                <div 
+                  key={category} 
+                  className="top-category-item"
+                  style={{
+                    '--category-color': categoryColor.color,
+                    '--category-rgb': categoryColor.rgb
+                  }}
+                >
+                  <div className="top-category-header">
+                    <div className="category-name-section">
+                      <div className="category-rank">
+                        {index + 1}
+                      </div>
+                      <span 
+                        className="category-name"
+                        onClick={() => handleCategoryClick(category)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {category}
+                      </span>
+                    </div>
+
+                    <div className="amounts-group">
+                      <div className="amount-row">
+                        <span className="amount-label">Budget:</span>
+                        <span className="category-budget">
+                          ₹{budget.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="amount-row">
+                        <span className="amount-label">Spent:</span>
+                        <span className="category-spent">
+                          ₹{data.total.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="top-expense-info">
+                    <div className="top-expense-row">
+                      <span className="top-expense-label">Top Expense:</span>
+                      <span 
+                        className="top-expense-amount"
+                        onClick={() => handleExpenseClick(data.topExpense.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        ₹{data.topExpense.amount.toLocaleString()}
+                      </span>
+                    </div>
+                    {data.topExpense.notes && (
+                      <span className="top-expense-notes">{data.topExpense.notes}</span>
+                    )}
+                  </div>
+
+                  {budget > 0 && (
+                    <div className="progress-section">
+                      <div className="category-bar-section">
+                        <div className="category-bar-container">
+                          <div
+                            className="category-spent-bar"
+                            style={{
+                              width: `${Math.min(percentage, 100)}%`
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <span className={`category-percentage ${isOverBudget ? 'over-budget' : ''}`}>
+                        {percentage}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Transaction Details Panel */}
+        {showExpenseModal && selectedExpense && (
+          <div className="transaction-panel-overlay" onClick={closeExpenseModal}>
+            <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+              <div className="transaction-header">
+                <div className="transaction-title">
+                  <FaMoneyBillWave />
+                  Transaction Details
+                </div>
+                <button className="transaction-close" onClick={closeExpenseModal}>
+                  <FaTimes />
+                </button>
+              </div>
+              
+              <div className="transaction-content">
+                <div className="transaction-details">
+                  <div className="detail-item info-card">
+                    <div className="detail-icon-wrapper">
+                      <FaInfoCircle />
+                    </div>
+                    <div className="info-content">
+                      <div className="info-row">
+                        <span className="info-label">Category:</span>
+                        <span className="info-value">{selectedExpense.category}</span>
+                      </div>
+                      <div className="info-row">
+                        <span className="info-label">Sub Category:</span>
+                        <span className="info-value">{selectedExpense.sub_category}</span>
+                      </div>
+                      <div className="info-row">
+                        <span className="info-label">Bank:</span>
+                        <span className="info-value">{selectedExpense.bankname}</span>
+                      </div>
+                    </div>
+                    <div className="amount-section">
+                      <div className="amount-figure">
+                        ₹{Math.abs(selectedExpense.amount).toLocaleString()}
+                      </div>
+                      <div className="amount-date">
+                        {new Date(selectedExpense.date_time).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {selectedExpense.notes && (
+                    <div className="detail-item notes">
+                      <div className="detail-icon-wrapper">
+                        <FaInfoCircle />
+                      </div>
+                      <div className="detail-content">
+                        <div className="detail-label">Notes</div>
+                        <div className="detail-value">{selectedExpense.notes}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="subcategory-chart">
+          <h2>
+            <FaChartBar /> Top Sub-Categories
           </h2>
           <div className="chart-container">
-            <Doughnut data={prepareCategoryData()} options={doughnutOptions} />
+            <Bar
+              data={prepareTopSubCategoriesData()}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    titleColor: "#1f2937",
+                    bodyColor: "#1f2937",
+                    borderColor: "#e5e7eb",
+                    borderWidth: 1,
+                    padding: 12,
+                    bodyFont: {
+                      size: 14,
+                      family: "'Inter', sans-serif",
+                      weight: '500',
+                    },
+                    titleFont: {
+                      size: 14,
+                      family: "'Inter', sans-serif",
+                      weight: '600',
+                    },
+                    callbacks: {
+                      label: (context) => `₹${context.raw.toLocaleString()}`,
+                    },
+                  },
+                  datalabels: {
+                    display: true,
+                    color: '#000000',
+                    anchor: 'start',
+                    align: 'start',
+                    offset: 8,
+                    font: (context) => {
+                      const value = context.dataset.data[context.dataIndex];
+                      const valueLength = value.toString().length;
+                      return {
+                        family: "'Inter', sans-serif",
+                        size: valueLength > 6 ? 10 : 12,
+                        weight: '600',
+                      };
+                    },
+                    formatter: (value) => value > 2000 ? `₹${value.toLocaleString()}` : '',
+                  },
+                },
+                scales: {
+                  x: {
+                    beginAtZero: true,
+                    position: 'top',
+                    grid: {
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
+                      },
+                      padding: 10,
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.x.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#22c55e'; // Green
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow
+                        } else {
+                          return '#ef4444'; // Red
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
+                    },
+                  },
+                  y: {
+                    position: 'right',
+                    reverse: true,
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '600',
+                      },
+                      padding: 10,
+                      color: '#4b5563',
+                    },
+                    border: {
+                      display: false,
+                    },
+                  },
+                },
+                animation: {
+                  duration: 1000,
+                  easing: 'easeInOutQuart',
+                },
+              }}
+              plugins={[ChartDataLabels]}
+            />
           </div>
         </div>
 
@@ -1186,18 +2481,48 @@ const Dashboard = () => {
                       boxWidth: 12,
                       usePointStyle: true,
                       pointStyle: "circle",
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
+                      },
+                      padding: 20,
                     },
                   },
                   tooltip: {
                     mode: "index",
                     intersect: false,
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    titleColor: "#1f2937",
+                    bodyColor: "#1f2937",
+                    borderColor: "#e5e7eb",
+                    borderWidth: 1,
+                    padding: 12,
+                    bodyFont: {
+                      size: 14,
+                      family: "'Inter', sans-serif",
+                      weight: '500',
+                    },
+                    titleFont: {
+                      size: 14,
+                      family: "'Inter', sans-serif",
+                      weight: '600',
+                    },
                     callbacks: {
+                      title: (context) => {
+                        // Get the date from the labels array
+                        const dateStr = context[0].label;
+                        const [day, month] = dateStr.split('/');
+                        // Create a date object using the current year
+                        const date = new Date(new Date().getFullYear(), parseInt(month) - 1, parseInt(day));
+                        return date.toLocaleDateString('en-US', { 
+                          month: 'short',
+                          day: 'numeric'
+                        });
+                      },
                       label: function (context) {
-                        // Only show categories with values greater than 0
                         if (context.parsed.y > 0) {
-                          return `${
-                            context.dataset.label
-                          }: ₹${context.parsed.y.toLocaleString()}`;
+                          return `${context.dataset.label}: ₹${context.parsed.y.toLocaleString()}`;
                         }
                         return null;
                       },
@@ -1207,13 +2532,54 @@ const Dashboard = () => {
                 scales: {
                   x: {
                     grid: {
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '600',
+                      },
+                      padding: 10,
+                      maxRotation: 0,
+                      minRotation: 0,
+                      color: '#4b5563',
+                    },
+                    border: {
                       display: false,
                     },
                   },
                   y: {
                     beginAtZero: true,
                     grid: {
-                      color: "rgba(0, 0, 0, 0.1)",
+                      color: "rgba(0, 0, 0, 0.05)",
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      font: {
+                        family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
+                      },
+                      padding: 10,
+                      callback: (value) => `₹${value.toLocaleString()}`,
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.y.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#22c55e'; // Green
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow
+                        } else {
+                          return '#ef4444'; // Red
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
                     },
                   },
                 },
@@ -1227,61 +2593,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="top-categories">
+        <div className="weekly-trend-chart">
           <h2>
-            <FaChartLine /> Top Spending Categories
-          </h2>
-          <div className="top-categories-list">
-            {topCategories.map(([category, amount], index) => (
-              <div key={category} className="top-category-item">
-                <div
-                  className="category-rank"
-                  style={{
-                    backgroundColor: colors[index % colors.length].replace(
-                      "1)",
-                      "0.1)"
-                    ),
-                    color: colors[index % colors.length],
-                    border: `2px solid ${colors[index % colors.length]}`,
-                  }}
-                >
-                  {index + 1}
-                </div>
-                <div className="category-info">
-                  <span
-                    className="category-name"
-                    style={{
-                      color: colors[index % colors.length],
-                    }}
-                  >
-                    {category}
-                  </span>
-                  <span className="category-amount">
-                    ₹{amount.toLocaleString()}
-                  </span>
-                </div>
-                <div className="category-bar-container">
-                  <div
-                    className="category-bar"
-                    style={{
-                      width: `${(amount / topCategories[0][1]) * 100}%`,
-                      backgroundColor: colors[index % colors.length],
-                      opacity: 0.8,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="subcategory-chart">
-          <h2>
-            <FaChartBar /> Top Sub-Categories
+            <FaChartBar /> Weekly Spending Pattern
           </h2>
           <div className="chart-container">
-            <Bar
-              data={prepareTopSubCategoriesData()}
+            <Line
+              data={prepareWeeklyTrendData()}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
@@ -1311,120 +2629,45 @@ const Dashboard = () => {
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
                       },
+                      padding: 10,
                       callback: (value) => `₹${value.toLocaleString()}`,
-                    },
-                  },
-                  x: {
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      font: {
-                        family: "'Inter', sans-serif",
-                      },
-                    },
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="category-budgets-chart">
-          <h2>
-            <FaChartBar /> Categories & Budgets
-          </h2>
-          <div className="chart-container">
-            <Bar
-              data={prepareCategoryBudgetsData()}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  // legend: {
-                  //   display: false
-                  // },
-                  tooltip: {
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    titleColor: "#1f2937",
-                    bodyColor: "#1f2937",
-                    borderColor: "#e5e7eb",
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                      label: (context) => {
-                        const dataset = context.dataset;
-                        const value = context.parsed.y;
-                        const category = context.label;
-                        const budget =
-                          dataset.label === "Budget"
-                            ? value
-                            : context.chart.data.datasets[0].data[
-                                context.dataIndex
-                              ];
-                        const spent =
-                          dataset.label === "Spent"
-                            ? value
-                            : context.chart.data.datasets[1].data[
-                                context.dataIndex
-                              ];
-
-                        if (dataset.label === "Budget") {
-                          return `Budget: ₹${value.toLocaleString()}`;
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.y.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#22c55e'; // Green
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow
                         } else {
-                          const percentage =
-                            budget > 0
-                              ? ((spent / budget) * 100).toFixed(1)
-                              : 0;
-                          return `Spent: ₹${value.toLocaleString()} (${percentage}% of budget)`;
+                          return '#ef4444'; // Red
                         }
                       },
                     },
-                  },
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    grid: {
-                      color: "rgba(0, 0, 0, 0.05)",
-                      drawBorder: false,
-                    },
-                    ticks: {
-                      font: {
-                        family: "'Inter', sans-serif",
-                      },
-                      callback: (value) => `₹${value.toLocaleString()}`,
+                    border: {
+                      display: false,
                     },
                   },
                   x: {
                     grid: {
-                      display: false,
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
                     },
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
                       },
-                      maxRotation: 45,
-                      minRotation: 45,
                     },
                   },
                 },
-                interaction: {
-                  mode: "index",
-                  intersect: false,
-                },
               }}
             />
-          </div>
-        </div>
-
-        <div className="weekly-trend-chart">
-          <h2>
-            <FaChartBar /> Weekly Spending Pattern
-          </h2>
-          <div className="chart-container">
-            <Bar data={prepareWeeklyTrendData()} options={weeklyChartOptions} />
           </div>
         </div>
 
@@ -1469,18 +2712,47 @@ const Dashboard = () => {
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '500',
                       },
+                      padding: 10,
                       callback: (value) => `₹${value.toLocaleString()}`,
+                      color: (context) => {
+                        const value = context.tick.value;
+                        const maxValue = context.chart.scales.y.max;
+                        const percentage = value / maxValue;
+                        
+                        if (percentage <= 0.3) {
+                          return '#ef4444'; // Red for low values
+                        } else if (percentage <= 0.6) {
+                          return '#eab308'; // Yellow for medium values
+                        } else {
+                          return '#22c55e'; // Green for high values
+                        }
+                      },
+                    },
+                    border: {
+                      display: false,
                     },
                   },
                   x: {
                     grid: {
-                      display: false,
+                      display: true,
+                      color: "rgba(0, 0, 0, 0.05)",
                     },
                     ticks: {
                       font: {
                         family: "'Inter', sans-serif",
+                        size: 12,
+                        weight: '600',
                       },
+                      padding: 10,
+                      maxRotation: 0,
+                      minRotation: 0,
+                      color: '#4b5563',
+                    },
+                    border: {
+                      display: false,
                     },
                   },
                 },
@@ -1489,6 +2761,171 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Category Transactions Modal */}
+      {showCategoryTransactionsModal && (
+        <div className="transaction-panel-overlay" onClick={() => setShowCategoryTransactionsModal(false)}>
+          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+            <div className="transaction-header">
+              <div className="transaction-title">
+                <FaTags />
+                Category Transactions
+              </div>
+              <button className="transaction-close" onClick={() => setShowCategoryTransactionsModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="transaction-content">
+              <div className="category-transactions-table-container">
+                <div className={`category-transactions-table ${isSlidingOut ? 'sliding-out' : ''}`}>
+                  <div className="table-body">
+                    {selectedCategoryTransactions.map((transaction, index) => (
+                      <div 
+                        key={transaction.id} 
+                        className="table-row"
+                        onClick={() => handleTransactionClick(transaction)}
+                      >
+                        <div className="table-cell serial">
+                          {index + 1}
+                        </div>
+                        <div className="table-cell subcategory">
+                          {transaction.sub_category}
+                        </div>
+                        <div className="table-cell date">
+                          {new Date(transaction.date_time).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="table-cell amount" style={{ color: getAmountColor(Math.abs(transaction.amount)) }}>
+                          ₹{Math.abs(transaction.amount).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedTransaction && (
+        <div className="transaction-panel-overlay" onClick={handleCloseTransactionPanel}>
+          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+            <div className="transaction-header">
+              <div className="transaction-title">
+                <FaMoneyBillWave />
+                Transaction Details
+              </div>
+              <button className="transaction-close" onClick={handleCloseTransactionPanel}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="transaction-content">
+              <div className="transaction-details">
+                <div className="detail-item info-card">
+                  <div className="detail-icon-wrapper">
+                    <FaInfoCircle />
+                  </div>
+                  <div className="info-content">
+                    <div className="info-row">
+                      <span className="info-label">Category:</span>
+                      <span className="info-value">{selectedTransaction.category}</span>
+                    </div>
+                    <div className="info-row">
+                      <span className="info-label">Sub Category:</span>
+                      <span className="info-value">{selectedTransaction.sub_category}</span>
+                    </div>
+                    <div className="info-row">
+                      <span className="info-label">Bank:</span>
+                      <span className="info-value">{selectedTransaction.bankname}</span>
+                    </div>
+                  </div>
+                  <div className="amount-section">
+                    <div className="amount-figure">
+                      ₹{Math.abs(selectedTransaction.amount).toLocaleString()}
+                    </div>
+                    <div className="amount-date">
+                      {new Date(selectedTransaction.date_time).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {selectedTransaction.notes && (
+                  <div className="detail-item notes">
+                    <div className="detail-icon-wrapper">
+                      <FaInfoCircle />
+                    </div>
+                    <div className="detail-content">
+                      <div className="detail-label">Notes</div>
+                      <div className="detail-value">{selectedTransaction.notes}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Weekly Transactions Modal */}
+      {showWeekTransactionsModal && (
+        <div className="transaction-panel-overlay" onClick={() => setShowWeekTransactionsModal(false)}>
+          <div className="transaction-panel" onClick={e => e.stopPropagation()}>
+            <div className="transaction-header">
+              <div className="transaction-title">
+                <FaCalendarAlt />
+                Weekly Transactions
+              </div>
+              <button className="transaction-close" onClick={() => setShowWeekTransactionsModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="transaction-content">
+              <div className="category-transactions-table-container">
+                <div className="category-transactions-table">
+                  <div className="table-body">
+                    {selectedWeekTransactions.map((transaction, index) => (
+                      <div 
+                        key={transaction.id} 
+                        className="table-row"
+                        // onClick={() => handleTransactionClick(transaction)}
+                      >
+                        <div className="table-cell serial">
+                          {index + 1}
+                        </div>
+                        <div className="table-cell subcategory">
+                          {transaction.sub_category}
+                        </div>
+                        <div className="table-cell date">
+                          {new Date(transaction.date_time).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="table-cell amount" style={{ color: getAmountColor(Math.abs(transaction.amount)) }}>
+                          ₹{Math.abs(transaction.amount).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

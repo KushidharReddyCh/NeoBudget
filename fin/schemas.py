@@ -36,3 +36,9 @@ class CreditCardTransactions(BaseModel):
     emi_duration: int
     bankname: str
     notes: Optional[str] = None
+
+class CibilScore(BaseModel):
+    score: int
+    date_time: datetime
+    timestamp: Optional[datetime] = None
+    notes: Optional[str] = None

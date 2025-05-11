@@ -46,6 +46,7 @@ export const subCategories = {
     'Internet',
     'Household Items',
     'Money Transfer',
+    'Repairs',
     'Others'
   ],
   'Debt': [

@@ -51,4 +51,11 @@ class CreditCardTransactions(Base):
     notes = Column(String)
 
 
-    
+class CibilScore(Base):
+    __tablename__ = 'cibil_score'
+
+    id = Column(Integer, primary_key=True, index=True)
+    score = Column(Integer, nullable=False)
+    date_time = Column(DateTime, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
+    notes = Column(String)

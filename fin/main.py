@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List
 import logging
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 # Configure logging
 logging.basicConfig(
@@ -467,3 +467,88 @@ def get_credit_card_transaction_by_date_range(start_date: date, end_date: date, 
 
 
 ########################### & End of Credit Card Transaction APIs ########################## 
+
+########################### & Credit Card APIs ########################## 
+
+@app.post("/create-cibil-score")
+def create_cibil_score(score: schemas.CibilScore, db:Session = Depends(get_db)):
+    logger.info(f"Creating new cibil score: {score.model_dump()}")
+    new_score = models.CibilScore(
+        score=score.score,
+        date_time=score.date_time,
+        timestamp=datetime.now(),
+        notes=score.notes,
+    )
+    db.add(new_score)
+    db.commit()
+    db.refresh(new_score)
+    logger.info(f"Successfully created cibil score with ID: {new_score.id}")
+    return new_score
+
+@app.get("/get-all-cibil-scores")
+def get_all_cibil_scores(db:Session = Depends(get_db)):
+    logger.info("Fetching all cibil scores")
+    scores = db.query(models.CibilScore).all()
+    logger.info(f"Retrieved {len(scores)} cibil scores")
+    return scores
+
+@app.get("/get-cibil-score-by-month-and-year")
+def get_cibil_score_by_month_and_year(month: str, year: str, db:Session = Depends(get_db)):
+    logger.info(f"Fetching cibil score by month: {month} and year: {year}")
+    
+    # Convert month name to number (1-12)
+    month_map = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12
+    }
+    month_num = month_map.get(month.lower())
+    if not month_num:
+        raise HTTPException(status_code=400, detail="Invalid month name")
+    
+    # Create start and end dates for the month
+    start_date = datetime(int(year), month_num, 1)
+    if month_num == 12:
+        end_date = datetime(int(year) + 1, 1, 1) - timedelta(days=1)
+    else:
+        end_date = datetime(int(year), month_num + 1, 1) - timedelta(days=1)
+    
+    # Query scores within the date range
+    scores = db.query(models.CibilScore).filter(
+        models.CibilScore.date_time >= start_date,
+        models.CibilScore.date_time <= end_date
+    ).order_by(models.CibilScore.date_time.desc()).all()
+    
+    return scores
+
+@app.get("/get-current-cibil-score")
+def get_current_cibil_score(db:Session = Depends(get_db)):
+    logger.info("Fetching current cibil score")
+    score = db.query(models.CibilScore).order_by(models.CibilScore.date_time.desc()).first()
+    return score
+
+@app.get("/update-cibil-score-by-id")
+def update_cibil_score_by_id(score_id: int, score: schemas.CibilScore, db:Session = Depends(get_db)):
+    logger.info(f"Updating cibil score with ID: {score_id}")
+    score_query = db.query(models.CibilScore).filter(models.CibilScore.id == score_id)
+    existing_score = score_query.first()
+    if not existing_score:
+        raise HTTPException(status_code=404, detail="Cibil score not found")
+    score_query.update(score.model_dump())
+    db.commit()
+    db.refresh(existing_score)
+    logger.info(f"Successfully updated cibil score with ID: {score_id}")
+    return existing_score
+
+@app.get("/delete-cibil-score-by-id")
+def delete_cibil_score_by_id(score_id: int, db:Session = Depends(get_db)):
+    logger.info(f"Deleting cibil score with ID: {score_id}")
+    score_query = db.query(models.CibilScore).filter(models.CibilScore.id == score_id)
+    score = score_query.first()
+    if not score:
+        raise HTTPException(status_code=404, detail="Cibil score not found")
+    score_query.delete(synchronize_session=False)
+    db.commit()
+    logger.info(f"Successfully deleted cibil score with ID: {score_id}")
+    return "Cibil score deleted successfully"
+
+########################### & End of Credit Card APIs ########################## 
