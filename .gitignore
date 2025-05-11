@@ -8,3 +8,5 @@ msg.json
 out.txt
 your_database.db
 blog/
+package-lock.json
+package.json
