@@ -1,3 +1,9 @@
 __pycache__
 fastapi-venv
 .DS_Storenode_modules/
+app.log
+blog.db
+main.py
+msg.json
+out.txt
+your_database.db
