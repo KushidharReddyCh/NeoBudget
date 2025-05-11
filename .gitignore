@@ -10,3 +10,4 @@ your_database.db
 blog/
 package-lock.json
 package.json
+fin/finance.db
