@@ -563,7 +563,7 @@ const Dashboard = ({ customRange }) => {
     
     // Function to get color based on amount with specific thresholds
     const getColorForAmount = (amount) => {
-      if (amount <= 1000) {
+      if (amount <= 500) {
         return '#22c55e'; // Green for 0-1000
       } else if (amount <= 5000) {
         return '#fb923c'; // Lighter orange for 1000-5000
@@ -2785,7 +2785,7 @@ const Dashboard = ({ customRange }) => {
                 maintainAspectRatio: false,
                 plugins: {
                   legend: {
-                    position: "bottom",
+                    position: "top",
                     labels: {
                       boxWidth: 12,
                       usePointStyle: true,
@@ -3058,7 +3058,7 @@ const Dashboard = ({ customRange }) => {
         color: 'rgb(255, 255, 255)',
         fontSize: '0.9em'
       }}>
-        © {new Date().getFullYear()} All rights reserved to Kushidhar. Contact: kushidhar.dev@gmail.com +91 8688528841
+        © {new Date().getFullYear()} All rights reserved to kushidhar © kushidhar.dev@gmail.com +91 8688528841
       </div>
     </div>
   );
