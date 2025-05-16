@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaTimes, FaMoneyBillWave } from 'react-icons/fa';
+import { FaPlus, FaTimes, FaMoneyBillWave, FaUniversity } from 'react-icons/fa';
 import AddIncomeForm from '../components/AddIncomeForm';
 import IncomeTable from '../components/IncomeTable';
 import Toast from '../components/Toast';
+import Footer from '../components/Footer';
 import '../styles/TransactionPages.css';
 
 const IncomesPage = () => {
@@ -11,10 +12,22 @@ const IncomesPage = () => {
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [selectedBank, setSelectedBank] = useState('');
+
+  // List of available banks
+  const banks = [
+    'SBI Bank',
+    'Union Bank',
+    'Axis Bank',
+    'Liquid Cash',
+    'UPI Lite',
+    'Lent Balance',
+    'Other'
+  ];
 
   useEffect(() => {
     fetchIncomes();
-  }, []);
+  }, [selectedBank]); // Refetch when bank filter changes
 
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -26,7 +39,17 @@ const IncomesPage = () => {
 
   const fetchIncomes = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/get-all-income-transactions');
+      setLoading(true);
+      let response;
+      
+      if (selectedBank) {
+        // Use the bank-specific endpoint if a bank is selected
+        response = await fetch(`http://127.0.0.1:8000/get-income-by-bank/${selectedBank}`);
+      } else {
+        // Use the general endpoint if no bank is selected
+        response = await fetch('http://127.0.0.1:8000/get-all-income-transactions');
+      }
+
       if (!response.ok) throw new Error('Failed to fetch incomes');
       const data = await response.json();
       setIncomes(data);
@@ -106,6 +129,23 @@ const IncomesPage = () => {
             </h2>
           </div>
           <div className="header-actions">
+            <div className="filter-section">
+              <div className="bank-filter">
+                <FaUniversity className="filter-icon" />
+                <select
+                  value={selectedBank}
+                  onChange={(e) => setSelectedBank(e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">All Banks</option>
+                  {banks.map((bank) => (
+                    <option key={bank} value={bank}>
+                      {bank}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             {showAddForm ? (
               <button
                 className="add-expense-btn close"
@@ -145,6 +185,7 @@ const IncomesPage = () => {
           onClose={hideToast}
         />
       )}
+      <Footer />
     </div>
   );
 };

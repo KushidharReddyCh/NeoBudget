@@ -214,6 +214,12 @@ def delete_income_transaction(transaction_id: int, db:Session = Depends(get_db))
     logger.info(f"Successfully deleted transaction with ID: {transaction_id}")
     return "Transaction deleted successfully"
 
+@app.get("/get-income-by-bank/{bankname}")
+def get_income_by_bank(bankname: str, db:Session = Depends(get_db)):
+    logger.info(f"Fetching income by bank: {bankname}")
+    income = db.query(models.IncomeTransactions).filter(models.IncomeTransactions.bankname == bankname).all()
+    return income
+
 ################ & End of Income Transaction APIs ########################## 
 
 @app.get("/current-balance")

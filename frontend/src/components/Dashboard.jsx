@@ -28,6 +28,7 @@ import {
 } from "react-icons/fa";
 import "../styles/Dashboard.css";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Footer from './Footer';
 
 ChartJS.register(
   CategoryScale,
@@ -291,7 +292,7 @@ const Dashboard = ({ customRange }) => {
       //   startDate = new Date(now.setDate(now.getDate() - 90));
       // } else if (customRange === 'last365') {
       //   startDate = new Date(now.setDate(now.getDate() - 365));
-      // } else if (customRange.includes('-')) {
+      // } else if (customRange.includes("-")) {
       //   const [year, month] = customRange.split('-').map(Number);
       //   startDate = new Date(year, month - 1, 1);
       //   endDate = new Date(year, month, 0);
@@ -605,12 +606,13 @@ const Dashboard = ({ customRange }) => {
           const color = getColorForAmount(value);
           return color.replace(')', ', 0.2)'); // Add opacity for fill
         }
-      }
+      },
+      dates: sortedDates // Add dates to the dataset
     };
 
     return {
       labels: formattedDates,
-      datasets: [dataset],
+      datasets: [dataset]
     };
   };
 
@@ -1026,7 +1028,10 @@ const Dashboard = ({ customRange }) => {
         },
         callbacks: {
           title: (context) => {
-            const date = new Date(expenses[context[0].dataIndex].date_time);
+            const dataIndex = context[0].dataIndex;
+            const fullDate = context[0].dataset.dates[dataIndex];
+            if (!fullDate) return '';
+            const date = new Date(fullDate);
             return date.toLocaleDateString('en-US', { 
               month: 'short',
               day: 'numeric',
@@ -3049,17 +3054,9 @@ const Dashboard = ({ customRange }) => {
           </div>
         </div>
       )}
-      <div className="copyright-footer" style={{
-        textAlign: 'center',
-        padding: '20px',
-        backgroundColor: 'rgb(39, 40, 40)',
-        marginTop: '0px',
-        borderTop: '1px solid #e5e7eb',
-        color: 'rgb(255, 255, 255)',
-        fontSize: '0.9em'
-      }}>
-        © {new Date().getFullYear()} All rights reserved to kushidhar © kushidhar.dev@gmail.com +91 8688528841
-      </div>
+      
+      {/* Remove the old footer and add the Footer component */}
+      <Footer />
     </div>
   );
 };

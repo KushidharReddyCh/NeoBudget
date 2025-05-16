@@ -6,6 +6,7 @@ import AddCibilScoreForm from '../components/AddCibilScoreForm';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import Toast from '../components/Toast';
+import Footer from '../components/Footer';
 import '../styles/TransactionPages.css';
 
 const CreditCardPage = () => {
@@ -195,6 +196,7 @@ const CreditCardPage = () => {
           onClose={hideToast}
         />
       )}
+      <Footer />
     </div>
   );
 };

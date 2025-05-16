@@ -6,6 +6,7 @@ import DateRangeFilter from '../components/DateRangeFilter';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import Toast from '../components/Toast';
+import Footer from '../components/Footer';
 import '../styles/TransactionPages.css';
 
 const ExpensesPage = () => {
@@ -151,6 +152,7 @@ const ExpensesPage = () => {
           onClose={hideToast}
         />
       )}
+      <Footer />
     </div>
   );
 };
